@@ -1,6 +1,22 @@
 import Components from '../models/components.model.js';
 
 /**
+ * Create a new component object with default properties
+ * @param {Object} data - Component data (title, description, category)
+ * @returns {Object} Component object with auto-generated id and timestamps
+ */
+export function createComponent(data) {
+  return {
+    id: Date.now().toString(),
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
+/**
  * Get all components
  */
 export const getAll = async () => {
@@ -31,10 +47,11 @@ export const getById = async (id) => {
  */
 export const create = async (data) => {
   try {
+    const component = createComponent(data);
     // TODO: Implement database operation
-    // const component = new Components(data);
-    // return await component.save();
-    return data;
+    // const saved = new Components(component);
+    // return await saved.save();
+    return component;
   } catch (error) {
     throw new Error(`Failed to create component: ${error.message}`);
   }

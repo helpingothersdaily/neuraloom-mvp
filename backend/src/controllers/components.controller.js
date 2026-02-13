@@ -25,9 +25,22 @@ export const getById = asyncHandler(async (req, res) => {
 /**
  * @route POST /api/components
  * @desc Create new component
+ * @body {Object} title, description, category
  */
 export const create = asyncHandler(async (req, res) => {
-  const component = await componentsService.create(req.body);
+  const { title, description, category } = req.body;
+  
+  // Validate required fields
+  if (!title) {
+    return res.status(400).json({ success: false, error: 'Title is required' });
+  }
+  
+  const component = await componentsService.create({
+    title,
+    description: description || '',
+    category: category || 'general',
+  });
+  
   res.status(201).json({ success: true, data: component });
 });
 
