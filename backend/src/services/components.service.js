@@ -1,29 +1,33 @@
-import Components from '../models/components.model.js';
+import { createComponent } from '../models/components.model.js';
+
+// In-memory storage (will be replaced with database)
+const components = [];
 
 /**
- * Create a new component object with default properties
+ * Add a new component
  * @param {Object} data - Component data (title, description, category)
- * @returns {Object} Component object with auto-generated id and timestamps
+ * @returns {Object} Created component with id and timestamps
  */
-export function createComponent(data) {
-  return {
-    id: Date.now().toString(),
-    title: data.title,
-    description: data.description,
-    category: data.category,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+export function addComponent(data) {
+  const component = createComponent(data);
+  components.push(component);
+  return component;
 }
 
 /**
  * Get all components
+ * @returns {Array} All stored components
+ */
+export function listComponents() {
+  return components;
+}
+
+/**
+ * Get all components (async wrapper for API)
  */
 export const getAll = async () => {
   try {
-    // TODO: Implement database query
-    // return await Components.find();
-    return [];
+    return listComponents();
   } catch (error) {
     throw new Error(`Failed to fetch components: ${error.message}`);
   }
@@ -34,9 +38,7 @@ export const getAll = async () => {
  */
 export const getById = async (id) => {
   try {
-    // TODO: Implement database query
-    // return await Components.findById(id);
-    return null;
+    return components.find((c) => c.id === id) || null;
   } catch (error) {
     throw new Error(`Failed to fetch component: ${error.message}`);
   }
@@ -47,11 +49,7 @@ export const getById = async (id) => {
  */
 export const create = async (data) => {
   try {
-    const component = createComponent(data);
-    // TODO: Implement database operation
-    // const saved = new Components(component);
-    // return await saved.save();
-    return component;
+    return addComponent(data);
   } catch (error) {
     throw new Error(`Failed to create component: ${error.message}`);
   }
@@ -62,9 +60,16 @@ export const create = async (data) => {
  */
 export const update = async (id, data) => {
   try {
-    // TODO: Implement database operation
-    // return await Components.findByIdAndUpdate(id, data, { new: true });
-    return null;
+    const index = components.findIndex((c) => c.id === id);
+    if (index === -1) return null;
+    
+    const updated = {
+      ...components[index],
+      ...data,
+      updatedAt: new Date(),
+    };
+    components[index] = updated;
+    return updated;
   } catch (error) {
     throw new Error(`Failed to update component: ${error.message}`);
   }
@@ -75,9 +80,11 @@ export const update = async (id, data) => {
  */
 export const remove = async (id) => {
   try {
-    // TODO: Implement database operation
-    // return await Components.findByIdAndDelete(id);
-    return null;
+    const index = components.findIndex((c) => c.id === id);
+    if (index === -1) return null;
+    
+    const [deleted] = components.splice(index, 1);
+    return deleted;
   } catch (error) {
     throw new Error(`Failed to delete component: ${error.message}`);
   }

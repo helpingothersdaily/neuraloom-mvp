@@ -25,6 +25,20 @@
  * export default mongoose.model('Components', ComponentSchema);
  */
 
+/**
+ * Create a new component object with generated ID and timestamps
+ */
+export function createComponent(data) {
+  return {
+    id: Date.now().toString(),
+    title: data.title,
+    description: data.description,
+    category: data.category,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
+
 export default class Components {
   constructor(data) {
     Object.assign(this, data);
