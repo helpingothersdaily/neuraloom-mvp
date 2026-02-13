@@ -1,9 +1,9 @@
-const Components = require('../models/components.model');
+import Components from '../models/components.model.js';
 
 /**
  * Get all components
  */
-const getAll = async () => {
+export const getAll = async () => {
   try {
     // TODO: Implement database query
     // return await Components.find();
@@ -16,7 +16,7 @@ const getAll = async () => {
 /**
  * Get component by ID
  */
-const getById = async (id) => {
+export const getById = async (id) => {
   try {
     // TODO: Implement database query
     // return await Components.findById(id);
@@ -29,7 +29,7 @@ const getById = async (id) => {
 /**
  * Create new component
  */
-const create = async (data) => {
+export const create = async (data) => {
   try {
     // TODO: Implement database operation
     // const component = new Components(data);
@@ -43,7 +43,7 @@ const create = async (data) => {
 /**
  * Update component
  */
-const update = async (id, data) => {
+export const update = async (id, data) => {
   try {
     // TODO: Implement database operation
     // return await Components.findByIdAndUpdate(id, data, { new: true });
@@ -56,7 +56,7 @@ const update = async (id, data) => {
 /**
  * Delete component
  */
-const remove = async (id) => {
+export const remove = async (id) => {
   try {
     // TODO: Implement database operation
     // return await Components.findByIdAndDelete(id);
@@ -64,12 +64,4 @@ const remove = async (id) => {
   } catch (error) {
     throw new Error(`Failed to delete component: ${error.message}`);
   }
-};
-
-module.exports = {
-  getAll,
-  getById,
-  create,
-  update,
-  remove,
 };

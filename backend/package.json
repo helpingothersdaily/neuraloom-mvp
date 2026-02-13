@@ -2,6 +2,7 @@
   "name": "neuraloom-backend",
   "version": "1.0.0",
   "description": "Neuraloom Backend API",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

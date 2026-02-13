@@ -4,7 +4,7 @@
  * TODO: Implement your database model here
  * Example using MongoDB/Mongoose:
  * 
- * const mongoose = require('mongoose');
+ * import mongoose from 'mongoose';
  * 
  * const ComponentSchema = new mongoose.Schema({
  *   name: {
@@ -22,11 +22,11 @@
  *   },
  * });
  * 
- * module.exports = mongoose.model('Components', ComponentSchema);
+ * export default mongoose.model('Components', ComponentSchema);
  */
 
-module.exports = class Components {
+export default class Components {
   constructor(data) {
     Object.assign(this, data);
   }
-};
+}

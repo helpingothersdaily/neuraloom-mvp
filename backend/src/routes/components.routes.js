@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import * as componentsController from '../controllers/components.controller.js';
+
 const router = express.Router();
-const componentsController = require('../controllers/components.controller');
 
 // TODO: Implement your routes here
 // Example:
@@ -10,4 +11,4 @@ const componentsController = require('../controllers/components.controller');
 // router.put('/:id', componentsController.update);
 // router.delete('/:id', componentsController.delete);
 
-module.exports = router;
+export default router;

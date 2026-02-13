@@ -1,8 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const logger = require('./utils/logger');
-const errorHandler = require('./utils/errorHandler');
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import logger from './utils/logger.js';
+import { errorHandler } from './utils/errorHandler.js';
+import componentsRoutes from './routes/components.routes.js';
 
 const app = express();
 
@@ -18,8 +19,7 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-// TODO: Import and use your routes here
-// app.use('/api/components', require('./routes/components.routes'));
+app.use('/api/components', componentsRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -29,4 +29,4 @@ app.use((req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

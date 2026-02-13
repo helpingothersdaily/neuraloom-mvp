@@ -1,10 +1,10 @@
-const logger = require('./logger');
+import logger from './logger.js';
 
 /**
  * Global error handler middleware
  * Must be the last middleware registered
  */
-const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
   logger.error('Error caught by error handler:', err);
 
   const statusCode = err.statusCode || 500;
@@ -23,9 +23,6 @@ const errorHandler = (err, req, res, next) => {
 /**
  * Async wrapper to catch errors in async route handlers
  */
-const asyncHandler = (fn) => (req, res, next) => {
+export const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
-
-module.exports = errorHandler;
-module.exports.asyncHandler = asyncHandler;

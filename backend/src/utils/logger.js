@@ -1,4 +1,4 @@
-const { LOG_LEVEL } = require('../config/env');
+import { LOG_LEVEL } from '../config/env.js';
 
 const LOG_LEVELS = {
   error: 0,
@@ -32,4 +32,4 @@ const logger = {
   },
 };
 
-module.exports = logger;
+export default logger;

@@ -1,6 +1,6 @@
-const app = require('./app');
-const logger = require('./utils/logger');
-const { PORT } = require('./config/env');
+import app from './app.js';
+import logger from './utils/logger.js';
+import { PORT } from './config/env.js';
 
 const server = app.listen(PORT, () => {
   logger.info(`🚀 Server is running on port ${PORT}`);
@@ -15,4 +15,4 @@ process.on('SIGTERM', () => {
   });
 });
 
-module.exports = server;
+export default server;
