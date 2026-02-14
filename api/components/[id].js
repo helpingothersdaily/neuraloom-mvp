@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+module.exports = (req, res) => {
   // In-memory storage
   let components = [
     {
@@ -94,4 +94,5 @@ export default function handler(req, res) {
       error: error.message || "Internal server error",
     });
   }
-}
+};
+
