@@ -1,19 +1,4 @@
 {
   "buildCommand": "npm run build --prefix frontend",
-  "outputDirectory": "frontend/build",
-  "rewrites": [
-    {
-      "source": "/index.html",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/(?!api)(.*)$",
-      "destination": "/index.html"
-    }
-  ],
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "outputDirectory": "frontend/build"
 }
