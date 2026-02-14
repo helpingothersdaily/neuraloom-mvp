@@ -1,20 +1,11 @@
+const { components } = require("./_store");
+
 module.exports = (req, res) => {
-  // In-memory storage
-  let components = [
-    {
-      id: "1",
-      title: "Example Component",
-      description: "This is an example component",
-      category: "general",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ];
 
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   // Handle preflight
   if (req.method === "OPTIONS") {
