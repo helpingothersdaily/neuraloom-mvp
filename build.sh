@@ -3,7 +3,8 @@ set -e
 
 echo "Installing frontend dependencies..."
 cd frontend
-npm ci
+npm install
 echo "Building frontend..."
 npm run build
 echo "Build complete!"
+
