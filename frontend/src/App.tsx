@@ -202,9 +202,8 @@ const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     )}
 
     {seeds.map((seed) => (
-      <>
+      <div key={seed.id}>
         <div
-          key={seed.id}
           onClick={() => openSeed(seed)}
           ref={(el) => { seedRefs.current[seed.id] = el; }}
           className={`seed-card 
@@ -316,7 +315,7 @@ const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             </div>
           </div>
         )}
-      </>
+      </div>
     ))}
   </div>
 </div>

@@ -1,6 +1,7 @@
-const { components } = require("./_store");
+const { loadComponents, saveComponents } = require("./_store");
 
 module.exports = (req, res) => {
+  const components = loadComponents();
 
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,6 +40,7 @@ module.exports = (req, res) => {
       };
 
       components.push(newComponent);
+      saveComponents(components);
       res.status(201).json({
         success: true,
         data: newComponent,

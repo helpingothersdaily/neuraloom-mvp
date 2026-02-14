@@ -81,3 +81,5 @@ build/
 
 # PM2 logs
 logs/
+.vercel
+.env*.local
