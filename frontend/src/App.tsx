@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Component, api } from "./api";
+import { Component, api, setDeleteToken } from "./api";
 import { componentsService } from "./services/components.service";
 import "./App.css";
 
 export default function App() {
   console.log("✓ App component mounted");
   const [title, setTitle] = useState("");
+  const [deleteToken, setDeleteTokenState] = useState<string>(() => {
+    return localStorage.getItem("deleteToken") || "";
+  });
   const [seeds, setSeeds] = useState<Component[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +56,16 @@ export default function App() {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create component";
     setError(message);
+  }
+};
+
+const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const token = e.target.value;
+  setDeleteTokenState(token);
+  if (token) {
+    setDeleteToken(token);
+  } else {
+    localStorage.removeItem("deleteToken");
   }
 };
 
@@ -113,6 +126,29 @@ export default function App() {
           {error}
         </div>
       )}
+
+      <div style={{ marginTop: "2rem", padding: "1rem", background: "#f0f0f0", borderRadius: "8px", border: "1px solid #ddd" }}>
+        <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem", fontWeight: 500, color: "#333" }}>
+          Delete Token (required to delete seeds):
+        </label>
+        <input
+          type="password"
+          value={deleteToken}
+          onChange={handleTokenChange}
+          placeholder="Enter your secret delete token..."
+          style={{
+            width: "100%",
+            padding: "0.75rem 1rem",
+            fontSize: "0.9rem",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            boxSizing: "border-box",
+          }}
+        />
+        <div style={{ fontSize: "0.8rem", color: "#666", marginTop: "0.5rem" }}>
+          {deleteToken ? "✓ Token set" : "⚠ No token set - you won't be able to delete seeds"}
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
         <input
