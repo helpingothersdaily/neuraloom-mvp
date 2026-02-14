@@ -4,14 +4,10 @@
   "env": {
     "REACT_APP_API_URL": "/api"
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api(.*)",
-      "dest": "/api$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/:path*",
+      "destination": "/index.html"
     }
   ]
 }
