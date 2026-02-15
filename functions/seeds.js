@@ -1,4 +1,4 @@
-import { loadComponents, saveComponents } from "./_store.js";
+import { loadComponents, saveComponents } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,17 +16,19 @@ function jsonResponse(data, status = 200) {
 
 export default {
   async fetch(request) {
-    // Handle preflight
+    // Handle CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 200, headers: corsHeaders });
     }
 
     try {
+      // GET /api/seeds
       if (request.method === "GET") {
         const components = loadComponents();
         return jsonResponse({ success: true, data: components });
       }
 
+      // POST /api/seeds
       if (request.method === "POST") {
         const body = await request.json();
         const { title, description, category } = body;
@@ -50,18 +52,14 @@ export default {
 
         components.push(newComponent);
         saveComponents(components);
+
         return jsonResponse({ success: true, data: newComponent }, 201);
       }
 
+      // Unsupported method
       return jsonResponse(
         { success: false, error: "Method not allowed" },
         405
       );
     } catch (error) {
       return jsonResponse(
-        { success: false, error: error.message || "Internal server error" },
-        500
-      );
-    }
-  },
-};
