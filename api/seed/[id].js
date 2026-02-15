@@ -59,18 +59,6 @@ module.exports = (req, res) => {
         data: updated,
       });
     } else if (req.method === "DELETE") {
-      // Check for authorization token
-      const secretToken = process.env.DELETE_SECRET_TOKEN;
-      const authHeader = req.headers.authorization || "";
-      const providedToken = authHeader.replace("Bearer ", "");
-
-      if (!secretToken || providedToken !== secretToken) {
-        return res.status(401).json({
-          success: false,
-          error: "Unauthorized: Invalid or missing delete token",
-        });
-      }
-
       const index = components.findIndex((c) => c.id === componentId);
 
       if (index === -1) {

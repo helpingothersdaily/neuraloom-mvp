@@ -1,15 +1,5 @@
 const API_URL = "/api";
 
-// Get the delete token from localStorage
-function getDeleteToken(): string | null {
-  return localStorage.getItem("deleteToken");
-}
-
-// Set the delete token in localStorage
-export function setDeleteToken(token: string): void {
-  localStorage.setItem("deleteToken", token);
-}
-
 export interface Component {
   id: string;
   title: string;
@@ -81,15 +71,8 @@ export const api = {
   },
 
   async delete(id: string): Promise<Component> {
-    const token = getDeleteToken();
-    if (!token) {
-      throw new Error("Delete token not set. Please configure your delete token.");
-    }
     const response = await fetch(`${API_URL}/seed/${id}`, {
       method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
     });
     return handleResponse(response);
   },
