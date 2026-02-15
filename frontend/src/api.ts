@@ -36,7 +36,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 export const api = {
   async getAll(): Promise<Component[]> {
-    const url = `${API_URL}/components`;
+    const url = `${API_URL}/seeds`;
     console.log("Fetching:", url);
     try {
       const response = await fetch(url);
@@ -49,12 +49,12 @@ export const api = {
   },
 
   async getById(id: string): Promise<Component> {
-    const response = await fetch(`${API_URL}/components/${id}`);
+    const response = await fetch(`${API_URL}/seed/${id}`);
     return handleResponse(response);
   },
 
   async create(title: string, description = "", category = "general"): Promise<Component> {
-    const url = `${API_URL}/components`;
+    const url = `${API_URL}/seeds`;
     const payload = { title, description, category };
     console.log("Creating component at:", url, payload);
     try {
@@ -72,7 +72,7 @@ export const api = {
   },
 
   async update(id: string, updates: Partial<Component>): Promise<Component> {
-    const response = await fetch(`${API_URL}/components/${id}`, {
+    const response = await fetch(`${API_URL}/seed/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
@@ -85,7 +85,7 @@ export const api = {
     if (!token) {
       throw new Error("Delete token not set. Please configure your delete token.");
     }
-    const response = await fetch(`${API_URL}/components/${id}`, {
+    const response = await fetch(`${API_URL}/seed/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`,
