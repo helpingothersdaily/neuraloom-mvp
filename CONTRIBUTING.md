@@ -53,9 +53,9 @@ Write clear, concise commit messages following this format:
 
 **Example:**
 ```
-feat(backend): add component creation endpoint
+feat(api): add seed creation endpoint
 
-Implement POST /api/components endpoint to create new components
+Implement POST /api/seeds endpoint to create new seeds
 with validation and error handling.
 
 Closes #123

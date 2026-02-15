@@ -5,8 +5,6 @@ node_modules
 dist
 *.log
 .DS_Store
-backend/
-env/
 scripts/
 frontend/node_modules
 

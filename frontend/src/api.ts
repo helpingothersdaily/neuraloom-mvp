@@ -44,7 +44,7 @@ export const api = {
       return handleResponse(response);
     } catch (error) {
       console.error("Failed to fetch components:", error);
-      throw new Error(`Cannot connect to backend at ${API_URL}. Make sure the server is running on port 5000.`);
+      throw new Error(`Cannot connect to API at ${API_URL}.`);
     }
   },
 
@@ -67,7 +67,7 @@ export const api = {
       return handleResponse(response);
     } catch (error) {
       console.error("Failed to create component:", error);
-      throw new Error(`Cannot reach backend at ${API_URL}`);
+      throw new Error(`Cannot reach API at ${API_URL}`);
     }
   },
 
