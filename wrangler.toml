@@ -1,6 +1,6 @@
 name = "neuraloom-mvp"
 pages_build_output_dir = "frontend/dist"
-main = "api"
+main = "functions"
 compatibility_date = "2024-01-01"
 
 [build]
