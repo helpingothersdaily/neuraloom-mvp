@@ -1,60 +1,67 @@
-const { loadComponents, saveComponents } = require("./_store");
+import { loadComponents, saveComponents } from "./_store.js";
 
-module.exports = (req, res) => {
-  const components = loadComponents();
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Content-Type": "application/json",
+};
 
-  // CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: corsHeaders,
+  });
+}
 
-  // Handle preflight
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
+export default {
+  async fetch(request) {
+    // Handle preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders });
+    }
 
-  try {
-    if (req.method === "GET") {
-      res.status(200).json({
-        success: true,
-        data: components,
-      });
-    } else if (req.method === "POST") {
-      const { title, description, category } = req.body;
-
-      if (!title) {
-        return res.status(400).json({
-          success: false,
-          error: "Title is required",
-        });
+    try {
+      if (request.method === "GET") {
+        const components = loadComponents();
+        return jsonResponse({ success: true, data: components });
       }
 
-      const newComponent = {
-        id: Date.now().toString(),
-        title,
-        description: description || "",
-        category: category || "general",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      if (request.method === "POST") {
+        const body = await request.json();
+        const { title, description, category } = body;
 
-      components.push(newComponent);
-      saveComponents(components);
-      res.status(201).json({
-        success: true,
-        data: newComponent,
-      });
-    } else {
-      res.status(405).json({
-        success: false,
-        error: "Method not allowed",
-      });
+        if (!title) {
+          return jsonResponse(
+            { success: false, error: "Title is required" },
+            400
+          );
+        }
+
+        const components = loadComponents();
+        const newComponent = {
+          id: Date.now().toString(),
+          title,
+          description: description || "",
+          category: category || "general",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        components.push(newComponent);
+        saveComponents(components);
+        return jsonResponse({ success: true, data: newComponent }, 201);
+      }
+
+      return jsonResponse(
+        { success: false, error: "Method not allowed" },
+        405
+      );
+    } catch (error) {
+      return jsonResponse(
+        { success: false, error: error.message || "Internal server error" },
+        500
+      );
     }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message || "Internal server error",
-    });
-  }
+  },
 };

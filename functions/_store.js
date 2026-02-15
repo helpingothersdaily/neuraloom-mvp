@@ -1,8 +1,6 @@
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+// In-memory data store for Cloudflare Workers
+// For production, upgrade to Cloudflare KV (https://developers.cloudflare.com/kv/)
 
-const STORE_PATH = path.join(os.tmpdir(), "neuraloom-components.json");
 const DEFAULT_COMPONENTS = [
   {
     id: "1",
@@ -14,27 +12,12 @@ const DEFAULT_COMPONENTS = [
   },
 ];
 
-function loadComponents() {
-  try {
-    if (!fs.existsSync(STORE_PATH)) {
-      return [...DEFAULT_COMPONENTS];
-    }
+let store = [...DEFAULT_COMPONENTS];
 
-    const raw = fs.readFileSync(STORE_PATH, "utf8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [...DEFAULT_COMPONENTS];
-  } catch (error) {
-    console.error("Failed to load components store:", error);
-    return [...DEFAULT_COMPONENTS];
-  }
+export function loadComponents() {
+  return store;
 }
 
-function saveComponents(components) {
-  try {
-    fs.writeFileSync(STORE_PATH, JSON.stringify(components, null, 2), "utf8");
-  } catch (error) {
-    console.error("Failed to save components store:", error);
-  }
+export function saveComponents(components) {
+  store = components;
 }
-
-module.exports = { loadComponents, saveComponents };
