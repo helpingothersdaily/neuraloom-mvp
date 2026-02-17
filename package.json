@@ -1,0 +1,13 @@
+{
+  "name": "neuraloom-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "wrangler": "wrangler",
+    "dev": "wrangler pages dev frontend/dist --port 3001",
+    "build": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "wrangler": "4.65.0"
+  }
+}

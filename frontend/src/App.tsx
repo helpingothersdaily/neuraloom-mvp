@@ -104,8 +104,8 @@ export default function App() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Inter, sans-serif", maxWidth: 600, margin: "0 auto" }}>
-      <h1>Hello, Neuraloom 👋</h1>
-      <p>Your mind map starts here.</p>
+      <h1> Welcome to Neuraloom 👋</h1>
+      <p>Clarity starts here.</p>
 
       {error && (
         <div style={{ padding: "1rem", marginTop: "1rem", background: "#fee", border: "1px solid #f99", borderRadius: "8px", color: "#c33", fontSize: "0.9rem" }}>
