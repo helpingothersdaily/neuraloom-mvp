@@ -14,12 +14,11 @@ function jsonResponse(data, status = 200) {
   });
 }
 
-export default {
-  async fetch(request) {
-    // Handle CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 200, headers: corsHeaders });
-    }
+export default async (request) => {
+  // Handle CORS preflight
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 200, headers: corsHeaders });
+  }
 
     try {
       // GET /api/seeds

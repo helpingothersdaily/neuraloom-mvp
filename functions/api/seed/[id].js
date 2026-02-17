@@ -14,12 +14,11 @@ function jsonResponse(data, status = 200) {
   });
 }
 
-export default {
-  async fetch(request, env, context) {
-    // Handle preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 200, headers: corsHeaders });
-    }
+export default async (request, context) => {
+  // Handle preflight
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 200, headers: corsHeaders });
+  }
 
     // Extract ID from URL path: /api/seed/:id
     const url = new URL(request.url);
@@ -99,5 +98,4 @@ export default {
         500
       );
     }
-  },
 };
