@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import { Branch } from "../services/branches";
 
 interface Props {
@@ -25,7 +26,9 @@ export default function BranchList({ branches, onEdit, onDelete }: Props) {
             marginBottom: "0.75rem",
           }}
         >
-          <p style={{ margin: 0, marginBottom: "0.5rem" }}>{branch.content}</p>
+          <div style={{ margin: 0, marginBottom: "0.5rem" }}>
+            <ReactMarkdown>{branch.content}</ReactMarkdown>
+          </div>
 
           <div className="actions" style={{ display: "flex", gap: "0.5rem" }}>
             <button
