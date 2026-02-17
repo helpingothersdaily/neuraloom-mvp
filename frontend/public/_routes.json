@@ -1,7 +1,5 @@
 {
   "version": 1,
   "include": ["/*"],
-  "exclude": [
-    "/api/*"
-  ]
+  "exclude": ["/assets/*", "/index.html", "/manifest.json", "/robots.txt"]
 }
