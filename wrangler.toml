@@ -1,2 +1,4 @@
 name = "neuraloom-mvp"
 pages_build_output_dir = "frontend/dist"
+[pages]
+functions = "./functions"
