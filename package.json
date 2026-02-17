@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "wrangler": "wrangler",
-    "dev": "wrangler pages dev frontend/dist --port 3001",
+    "api": "wrangler pages dev frontend/dist --port 8788",
+    "dev": "wrangler pages dev frontend/dist --port 8788",
     "build": "cd frontend && npm run build"
   },
   "devDependencies": {
