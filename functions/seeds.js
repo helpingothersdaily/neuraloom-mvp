@@ -1,4 +1,4 @@
-import { loadComponents, saveComponents } from "../_store.js";
+import { loadComponents, saveComponents } from "./_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -63,3 +63,9 @@ export default {
       );
     } catch (error) {
       return jsonResponse(
+        { success: false, error: error.message || "Internal server error" },
+        500
+      );
+    }
+  },
+};
