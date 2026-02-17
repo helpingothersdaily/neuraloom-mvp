@@ -13,10 +13,9 @@ import {
 
 interface Props {
   seedId: string;
-  onClose?: () => void;
 }
 
-export default function SeedDetail({ seedId, onClose }: Props) {
+export default function SeedDetail({ seedId }: Props) {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
@@ -53,11 +52,6 @@ export default function SeedDetail({ seedId, onClose }: Props) {
     <div className="seed-detail" style={{ padding: "1rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
         <h2 style={{ margin: 0 }}>Branches</h2>
-        {onClose && (
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer" }}>
-            ×
-          </button>
-        )}
       </div>
 
       <button
