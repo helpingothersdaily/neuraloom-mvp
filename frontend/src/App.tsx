@@ -1,6 +1,8 @@
+console.log(">>> USING SEED DETAIL WITH BRANCHING");
 import { useState, useEffect, useRef } from "react";
 import { Component, api } from "./api";
 import { componentsService } from "./services/components.service";
+import SeedDetail from "./pages/SeedDetail";
 import "./App.css";
 
 export default function App() {
@@ -276,6 +278,9 @@ export default function App() {
                 Cancel
               </button>
             </div>
+
+            {/* Branches Section */}
+            <SeedDetail seedId={seed.id} />
           </div>
         )}
       </div>
