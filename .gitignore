@@ -13,6 +13,10 @@ yarn.lock
 .env.test.local
 .env.production.local
 
+# Cloudflare
+.dev.vars
+.wrangler/
+
 # Build outputs
 /build
 /dist
@@ -81,5 +85,4 @@ build/
 
 # PM2 logs
 logs/
-.vercel
-.env*.local
+
