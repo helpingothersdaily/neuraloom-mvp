@@ -1,4 +1,4 @@
-import { getBranch, updateBranch, deleteBranch } from "../_store.js";
+import { getComponent, updateComponent, deleteComponent } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,7 +16,7 @@ function jsonResponse(data, status = 200) {
 
 export async function onRequest(context) {
   const request = context.request;
-  const branchId = context.params.id;
+  const componentId = context.params.id;
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
@@ -24,41 +24,40 @@ export async function onRequest(context) {
   }
 
   try {
-    // GET /api/branches/:id
+    // GET /api/components/:id
     if (request.method === "GET") {
-      const branch = getBranch(branchId);
+      const component = getComponent(componentId);
 
-      if (!branch) {
-        return jsonResponse({ success: false, error: "Branch not found" }, 404);
+      if (!component) {
+        return jsonResponse({ success: false, error: "Component not found" }, 404);
       }
 
-      return jsonResponse({ success: true, data: branch });
+      return jsonResponse({ success: true, data: component });
     }
 
-    // PUT /api/branches/:id
+    // PUT /api/components/:id
     if (request.method === "PUT") {
       const body = await request.json();
-      const { content, componentId } = body;
+      const { title, description, branchIds } = body;
 
-      // Allow updating content and/or componentId
-      const updated = updateBranch(branchId, { content, componentId });
+      const updated = updateComponent(componentId, { title, description, branchIds });
 
       if (!updated) {
-        return jsonResponse({ success: false, error: "Branch not found" }, 404);
+        return jsonResponse({ success: false, error: "Component not found" }, 404);
       }
 
       return jsonResponse({ success: true, data: updated });
     }
 
-    // DELETE /api/branches/:id
+    // DELETE /api/components/:id
     if (request.method === "DELETE") {
-      const success = deleteBranch(branchId);
+      const success = deleteComponent(componentId);
 
       if (!success) {
-        return jsonResponse({ success: false, error: "Branch not found" }, 404);
+        return jsonResponse({ success: false, error: "Component not found" }, 404);
       }
 
-      return jsonResponse({ success: true, message: "Branch deleted" });
+      return jsonResponse({ success: true, message: "Component deleted" });
     }
 
     return jsonResponse({ success: false, error: "Method not allowed" }, 405);

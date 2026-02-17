@@ -14,6 +14,7 @@ const DEFAULT_COMPONENTS = [
 
 let store = [...DEFAULT_COMPONENTS];
 let branchStore = [];
+let componentStore = [];
 
 export function loadComponents() {
   return store;
@@ -33,11 +34,13 @@ export function getBranch(id) {
   return branchStore.find((b) => b.id === id);
 }
 
-export function createBranch({ seedId, content }) {
+export function createBranch({ seedId, content, parentBranchId = null }) {
   const branch = {
     id: Date.now().toString(),
     seedId,
     content,
+    componentId: null,
+    parentBranchId,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
@@ -45,11 +48,26 @@ export function createBranch({ seedId, content }) {
   return branch;
 }
 
-export function updateBranch(id, content) {
+export function getBranchesByComponent(componentId) {
+  return branchStore.filter((b) => b.componentId === componentId);
+}
+
+export function getSubBranches(parentBranchId) {
+  return branchStore.filter((b) => b.parentBranchId === parentBranchId);
+}
+
+export function updateBranch(id, data) {
   const branch = branchStore.find((b) => b.id === id);
   if (!branch) return null;
 
-  branch.content = content;
+  if (typeof data === "string") {
+    // Backward compatibility: if data is a string, treat it as content
+    branch.content = data;
+  } else {
+    branch.content = data.content ?? branch.content;
+    branch.componentId = data.componentId ?? branch.componentId;
+    branch.parentBranchId = data.parentBranchId ?? branch.parentBranchId;
+  }
   branch.updatedAt = Date.now();
   return branch;
 }
@@ -59,5 +77,47 @@ export function deleteBranch(id) {
   if (index === -1) return false;
 
   branchStore.splice(index, 1);
+  return true;
+}
+
+// --- COMPONENTS (branch compositions) ---
+
+export function getComponents() {
+  return componentStore;
+}
+
+export function getComponent(id) {
+  return componentStore.find((c) => c.id === id);
+}
+
+export function createComponent(data) {
+  const component = {
+    id: Date.now().toString(),
+    title: data.title || "",
+    description: data.description || "",
+    branchIds: data.branchIds || [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+  componentStore.push(component);
+  return component;
+}
+
+export function updateComponent(id, data) {
+  const component = getComponent(id);
+  if (!component) return null;
+
+  component.title = data.title ?? component.title;
+  component.description = data.description ?? component.description;
+  component.branchIds = data.branchIds ?? component.branchIds;
+  component.updatedAt = Date.now();
+
+  return component;
+}
+
+export function deleteComponent(id) {
+  const index = componentStore.findIndex((c) => c.id === id);
+  if (index === -1) return false;
+  componentStore.splice(index, 1);
   return true;
 }
