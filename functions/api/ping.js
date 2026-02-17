@@ -1,4 +1,4 @@
-export default async (request) => {
+export async function onRequest(context) {
   return new Response(
     JSON.stringify({
       status: "ok",
@@ -13,4 +13,4 @@ export default async (request) => {
       },
     }
   );
-};
+}
