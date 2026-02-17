@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 import BranchNotFound from "../components/BranchNotFound";
+import Tree, { TreeNode } from "../components/Tree";
 
 interface BranchData {
   id: string;
@@ -25,6 +26,7 @@ export default function BranchDetail() {
 
   const [branch, setBranch] = useState<BranchData | null>(null);
   const [components, setComponents] = useState<ComponentData[]>([]);
+  const [subBranches, setSubBranches] = useState<BranchData[]>([]);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
@@ -46,6 +48,14 @@ export default function BranchDetail() {
       .then((res) => res.json())
       .then((data) => setComponents(data.data || []));
   }, []);
+
+  useEffect(() => {
+    if (branch) {
+      fetch(`/api/branches?parentBranchId=${branch.id}`)
+        .then((res) => res.json())
+        .then((data) => setSubBranches(data.data || []));
+    }
+  }, [branch]);
 
   if (notFound) {
     return <BranchNotFound />;
@@ -118,6 +128,42 @@ export default function BranchDetail() {
           Promote to Component
         </button>
       </div>
+
+      <h3>Sub-branches</h3>
+      <Tree
+        node={{
+          label: branch.title || "Branch",
+          link: `/branches/${branch.id}`,
+          children: subBranches.map((sb) => ({
+            label: sb.title || "Untitled Branch",
+            link: `/branches/${sb.id}`,
+            children: [], // Phase 2: deeper recursion
+          })),
+        }}
+      />
+
+      <button
+        onClick={async () => {
+          const payload = {
+            title: "New Sub-branch",
+            content: "",
+            parentBranchId: branch.id,
+            componentId: branch.componentId || null,
+          };
+
+          const res = await fetch("/api/branches", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await res.json();
+          const newBranch = result.data || result;
+          navigate(`/branches/${newBranch.id}`);
+        }}
+      >
+        Add Sub-branch
+      </button>
     </div>
   );
 }
