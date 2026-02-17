@@ -66,5 +66,4 @@ export default async (request) => {
         500
       );
     }
-  },
 };
