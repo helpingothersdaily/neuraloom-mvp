@@ -15,6 +15,8 @@ export default function BranchEditor({ initialValue = "", onSave, onCancel }: Pr
       <SimpleEditor
         value={content}
         onChange={setContent}
+        id="branch-content"
+        name="branchContent"
         placeholder="Write your branch..."
         minHeight="100px"
       />

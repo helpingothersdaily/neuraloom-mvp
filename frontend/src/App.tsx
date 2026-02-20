@@ -136,6 +136,8 @@ export default function App() {
 
       <form onSubmit={handleSubmit} style={{ marginTop: "2rem" }}>
         <input
+          id="new-seed-title"
+          name="newSeedTitle"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -267,6 +269,8 @@ export default function App() {
             }}
           >
             <input
+              id={`seed-title-${seed.id}`}
+              name={`seedTitle-${seed.id}`}
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               style={{
@@ -280,6 +284,8 @@ export default function App() {
             <SimpleEditor
               value={editDescription}
               onChange={setEditDescription}
+              id={`seed-description-${seed.id}`}
+              name={`seedDescription-${seed.id}`}
               placeholder="Describe your seed..."
               minHeight="80px"
             />

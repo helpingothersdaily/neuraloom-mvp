@@ -48,12 +48,14 @@ export default function NestEditor() {
       <h2>{isEditing ? "Edit Nest" : "New Nest"}</h2>
 
       <label>Title</label>
-      <input value={title} onChange={(e) => setTitle(e.target.value)} />
+      <input id="nest-title" name="nestTitle" value={title} onChange={(e) => setTitle(e.target.value)} />
 
       <label>Description</label>
       <SimpleEditor
         value={description}
         onChange={setDescription}
+        id="nest-description"
+        name="nestDescription"
         placeholder="Describe this nest..."
         minHeight="180px"
       />

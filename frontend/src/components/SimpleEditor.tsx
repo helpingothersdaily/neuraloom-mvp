@@ -3,6 +3,8 @@ interface SimpleEditorProps {
   onChange: (nextValue: string) => void;
   placeholder?: string;
   minHeight?: string;
+  id?: string;
+  name?: string;
 }
 
 export default function SimpleEditor({
@@ -10,11 +12,15 @@ export default function SimpleEditor({
   onChange,
   placeholder = "Write here...",
   minHeight = "100px",
+  id = "simple-editor",
+  name = "simpleEditor",
 }: SimpleEditorProps) {
   return (
     <div>
       <div style={{ fontSize: "0.85rem", color: "#666", marginBottom: "0.25rem" }}>Editor</div>
       <textarea
+        id={id}
+        name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
