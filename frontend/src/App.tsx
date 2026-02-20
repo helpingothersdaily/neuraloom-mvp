@@ -1,6 +1,7 @@
 console.log(">>> USING SEED DETAIL WITH BRANCHING");
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { Nest, nestApi } from "./api";
 import { nestService } from "./services/nest.service";
 import SeedDetail from "./pages/SeedDetail";
@@ -209,6 +210,11 @@ export default function App() {
             <div style={{ fontSize: "1rem", marginBottom: "0.5rem", fontWeight: 500 }}>
               {seed.title}
             </div>
+            {seed.description?.trim() && (
+              <div style={{ fontSize: "0.9rem", color: "#444", marginBottom: "0.5rem" }}>
+                <ReactMarkdown>{seed.description}</ReactMarkdown>
+              </div>
+            )}
             <div style={{ fontSize: "0.8rem", color: "#999" }}>
               {new Date(seed.createdAt).toLocaleString()}
             </div>
