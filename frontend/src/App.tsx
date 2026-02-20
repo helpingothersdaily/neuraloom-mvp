@@ -211,8 +211,22 @@ export default function App() {
               {seed.title}
             </div>
             {seed.description?.trim() && (
-              <div style={{ fontSize: "0.9rem", color: "#444", marginBottom: "0.5rem" }}>
-                <ReactMarkdown>{seed.description}</ReactMarkdown>
+              <div
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#444",
+                  marginBottom: "0.5rem",
+                  maxHeight: "4.5rem",
+                  overflow: "hidden",
+                }}
+              >
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
+                  }}
+                >
+                  {seed.description}
+                </ReactMarkdown>
               </div>
             )}
             <div style={{ fontSize: "0.8rem", color: "#999" }}>
