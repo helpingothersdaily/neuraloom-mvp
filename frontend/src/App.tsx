@@ -189,9 +189,6 @@ export default function App() {
 
     {seeds.map((seed) => (
       <div key={seed.id}>
-        {(() => {
-          const previewDescription = selectedSeedId === seed.id ? editDescription : seed.description;
-          return (
         <div
           onClick={() => openSeed(seed)}
           ref={(el) => { seedRefs.current[seed.id] = el; }}
@@ -215,7 +212,7 @@ export default function App() {
             <div style={{ fontSize: "1rem", marginBottom: "0.5rem", fontWeight: 500 }}>
               {seed.title}
             </div>
-            {previewDescription?.trim() && (
+            {seed.description?.trim() && (
               <div
                 style={{
                   fontSize: "0.9rem",
@@ -226,7 +223,7 @@ export default function App() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {previewDescription}
+                {seed.description}
               </div>
             )}
             <div style={{ fontSize: "0.8rem", color: "#999" }}>
@@ -255,8 +252,6 @@ export default function App() {
             Delete
           </button>
         </div>
-          );
-        })()}
 
         {selectedSeedId === seed.id && (
           <div
