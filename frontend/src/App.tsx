@@ -8,7 +8,6 @@ import BranchDetail from "./pages/BranchDetail";
 import BranchListPage from "./pages/BranchListPage";
 import NestsList from "./nests/NestsList";
 import NestDetail from "./nests/NestDetail";
-import NestEditor from "./nests/NestEditor";
 import "./App.css";
 
 export default function App() {
@@ -122,9 +121,7 @@ export default function App() {
         <Route path="/branches" element={<BranchListPage />} />
         <Route path="/branches/:id" element={<BranchDetail />} />
         <Route path="/nests" element={<NestsList />} />
-        <Route path="/nests/new" element={<NestEditor />} />
         <Route path="/nests/:id" element={<NestDetail />} />
-        <Route path="/nests/:id/edit" element={<NestEditor />} />
         <Route path="/" element={
           <>
             <h1> Welcome to Neuraloom 👋</h1>
