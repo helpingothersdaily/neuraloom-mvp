@@ -49,6 +49,13 @@ export default function WysiwygEditor({
     onChange(editor.innerHTML);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    document.execCommand("insertLineBreak");
+    handleInput();
+  };
+
   const showPlaceholder = !value || value.replace(/<[^>]*>/g, "").trim().length === 0;
 
   return (
@@ -78,10 +85,12 @@ export default function WysiwygEditor({
       <div
         id={id}
         data-name={name}
+        dir="ltr"
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
+        onKeyDown={handleKeyDown}
         style={{
           width: "100%",
           padding: "0.65rem",
@@ -94,6 +103,9 @@ export default function WysiwygEditor({
           resize: "vertical",
           boxSizing: "border-box",
           outline: "none",
+          direction: "ltr",
+          unicodeBidi: "plaintext",
+          textAlign: "left",
         }}
         dangerouslySetInnerHTML={{ __html: value || "" }}
         aria-labelledby={emptyPlaceholderId}
