@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { CSSProperties, useEffect, useMemo, useRef } from "react";
 
 interface WysiwygEditorProps {
   value: string;
@@ -29,6 +29,19 @@ export default function WysiwygEditor({
   const editorRef = useRef<HTMLDivElement>(null);
   const emptyPlaceholderId = useMemo(() => `${id}-placeholder`, [id]);
 
+  const normalizeDirection = () => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    editor.setAttribute("dir", "ltr");
+    editor.style.direction = "ltr";
+    editor.style.unicodeBidi = "isolate";
+    editor.querySelectorAll("[dir]").forEach((node) => node.removeAttribute("dir"));
+  };
+
+  useEffect(() => {
+    normalizeDirection();
+  }, [value]);
+
   const applyCommand = (command: string, commandValue?: string) => {
     const editor = editorRef.current;
     if (!editor) return;
@@ -46,6 +59,11 @@ export default function WysiwygEditor({
   const handleInput = () => {
     const editor = editorRef.current;
     if (!editor) return;
+    const sanitized = editor.innerHTML.replace(/[\u202A-\u202E\u2066-\u2069]/g, "");
+    if (sanitized !== editor.innerHTML) {
+      editor.innerHTML = sanitized;
+    }
+    normalizeDirection();
     onChange(editor.innerHTML);
   };
 
@@ -104,7 +122,7 @@ export default function WysiwygEditor({
           boxSizing: "border-box",
           outline: "none",
           direction: "ltr",
-          unicodeBidi: "normal",
+          unicodeBidi: "isolate",
           textAlign: "left",
           writingMode: "horizontal-tb",
           whiteSpace: "pre-wrap",
