@@ -114,7 +114,7 @@ export default function App() {
       <nav style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
         <Link to="/">Seeds</Link>
         <Link to="/branches">Branches</Link>
-        <Link to="/nests">Nest Habitat</Link>
+        <Link to="/nests">Nest</Link>
       </nav>
 
       <Routes>
