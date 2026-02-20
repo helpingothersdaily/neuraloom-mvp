@@ -84,7 +84,7 @@ export default function NestDetail() {
 
   return (
     <div className="nest-detail">
-      <h2>Nest Detail</h2>
+      <h2>Nest Habitat</h2>
       <h3>{nest.title || "Untitled Nest"}</h3>
 
       <ReactMarkdown>{nest.description}</ReactMarkdown>
