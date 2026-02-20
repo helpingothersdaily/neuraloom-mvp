@@ -128,7 +128,7 @@ export default function App() {
         <Route path="/" element={
           <>
             <h1> Welcome to Neuraloom 👋</h1>
-            <p>Clarity starts here.</p>
+            <p>Where your thoughts keep their shape.</p>
 
       {error && (
         <div style={{ padding: "1rem", marginTop: "1rem", background: "#fee", border: "1px solid #f99", borderRadius: "8px", color: "#c33", fontSize: "0.9rem" }}>
