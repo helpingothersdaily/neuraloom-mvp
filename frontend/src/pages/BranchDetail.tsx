@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import BranchNotFound from "../nests/BranchNotFound";
 import Tree, { TreeNode } from "../nests/Tree";
+import SimpleEditor from "../components/SimpleEditor";
 
 interface BranchData {
   id: string;
@@ -27,6 +28,8 @@ export default function BranchDetail() {
   const [nests, setNests] = useState<NestData[]>([]);
   const [subBranches, setSubBranches] = useState<BranchData[]>([]);
   const [notFound, setNotFound] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState("");
 
   useEffect(() => {
     fetch(`/api/branches/${branchId}`)
@@ -38,7 +41,11 @@ export default function BranchDetail() {
         return res.json();
       })
       .then((data) => {
-        if (data) setBranch(data.data || data);
+        if (data) {
+          const loadedBranch = data.data || data;
+          setBranch(loadedBranch);
+          setEditContent(loadedBranch.content || "");
+        }
       });
   }, [branchId]);
 
@@ -82,13 +89,36 @@ export default function BranchDetail() {
     navigate(`/nests/${newNest.id}`);
   };
 
+  const handleSave = async () => {
+    const res = await fetch(`/api/branches/${branch.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: editContent, nestId: branch.nestId }),
+    });
+
+    const data = await res.json();
+    const updatedBranch = data.data || data;
+    setBranch(updatedBranch);
+    setEditContent(updatedBranch.content || "");
+    setIsEditing(false);
+  };
+
   return (
     <div className="branch-detail">
       <h2>Branch Details</h2>
 
-      <div className="branch-content" style={{ whiteSpace: "pre-wrap" }}>
-        {branch.content}
-      </div>
+      {isEditing ? (
+        <SimpleEditor
+          value={editContent}
+          onChange={setEditContent}
+          placeholder="Write your branch..."
+          minHeight="140px"
+        />
+      ) : (
+        <div className="branch-content" style={{ whiteSpace: "pre-wrap" }}>
+          {branch.content}
+        </div>
+      )}
 
       <p className="timestamp">
         Created: {new Date(branch.createdAt).toLocaleString()}
@@ -128,6 +158,21 @@ export default function BranchDetail() {
       </div>
 
       <div className="actions" style={{ marginTop: "1rem" }}>
+        {isEditing ? (
+          <>
+            <button onClick={handleSave}>Save</button>
+            <button
+              onClick={() => {
+                setEditContent(branch.content || "");
+                setIsEditing(false);
+              }}
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <button onClick={() => setIsEditing(true)}>Edit Branch</button>
+        )}
         <button onClick={handlePromoteToNest}>
           Let this Branch form a Nest
         </button>

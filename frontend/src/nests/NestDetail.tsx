@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Tree, { TreeNode } from "./Tree";
+import SimpleEditor from "../components/SimpleEditor";
 
 interface NestData {
   id: string;
@@ -25,6 +26,9 @@ export default function NestDetail() {
   const [nest, setNest] = useState<NestData | null>(null);
   const [branches, setBranches] = useState<BranchData[]>([]);
   const [notFound, setNotFound] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
 
   useEffect(() => {
     fetch(`/api/nests/${id}`)
@@ -36,7 +40,12 @@ export default function NestDetail() {
         return res.json();
       })
       .then((data) => {
-        if (data) setNest(data.data || data);
+        if (data) {
+          const loadedNest = data.data || data;
+          setNest(loadedNest);
+          setEditTitle(loadedNest.title || "");
+          setEditDescription(loadedNest.description || "");
+        }
       });
   }, [id]);
 
@@ -75,6 +84,23 @@ export default function NestDetail() {
     navigate("/nests");
   };
 
+  const handleSave = async () => {
+    const res = await fetch(`/api/nests/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: editTitle,
+        description: editDescription,
+        branchIds: nest.branchIds || [],
+      }),
+    });
+
+    const data = await res.json();
+    const updatedNest = data.data || data;
+    setNest(updatedNest);
+    setIsEditing(false);
+  };
+
   // Build tree structure
   const tree: TreeNode = {
     label: nest.title || "Nest",
@@ -84,9 +110,26 @@ export default function NestDetail() {
   return (
     <div className="nest-detail">
       <h2>Nest Habitat</h2>
-      <h3>{nest.title || "Untitled Nest"}</h3>
-
-      <div style={{ whiteSpace: "pre-wrap" }}>{nest.description}</div>
+      {isEditing ? (
+        <>
+          <input
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            style={{ width: "100%", marginBottom: "0.75rem", padding: "0.5rem", fontSize: "1rem" }}
+          />
+          <SimpleEditor
+            value={editDescription}
+            onChange={setEditDescription}
+            placeholder="Describe this nest..."
+            minHeight="140px"
+          />
+        </>
+      ) : (
+        <>
+          <h3>{nest.title || "Untitled Nest"}</h3>
+          <div style={{ whiteSpace: "pre-wrap" }}>{nest.description}</div>
+        </>
+      )}
 
       <p className="timestamp">
         Created: {new Date(nest.createdAt).toLocaleString()}
@@ -100,7 +143,22 @@ export default function NestDetail() {
       )}
 
       <div className="actions">
-        <Link to={`/nests/${id}/edit`}>Edit Nest</Link>
+        {isEditing ? (
+          <>
+            <button onClick={handleSave}>Save</button>
+            <button
+              onClick={() => {
+                setEditTitle(nest.title || "");
+                setEditDescription(nest.description || "");
+                setIsEditing(false);
+              }}
+            >
+              Cancel
+            </button>
+          </>
+        ) : (
+          <button onClick={() => setIsEditing(true)}>Edit Nest</button>
+        )}
         <button onClick={handleDelete}>Delete Nest</button>
       </div>
 
