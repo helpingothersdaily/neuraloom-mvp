@@ -2,10 +2,18 @@
 import { Link } from "react-router-dom";
 import { Branch } from "../services/branches";
 
-function unescapeHtml(html: string): string {
+function renderBranchContent(content: string): { __html: string } {
+  // Unescape HTML entities
   const doc = document.createElement("textarea");
-  doc.innerHTML = html;
-  return doc.value;
+  doc.innerHTML = content;
+  const unescaped = doc.value;
+  // If it looks like HTML, render as HTML; otherwise, treat as plain text
+  if (/[<>]/.test(unescaped)) {
+    return { __html: unescaped };
+  } else {
+    // Convert newlines to <br> for plain text
+    return { __html: unescaped.replace(/\n/g, '<br>') };
+  }
 }
 
 interface Props {
@@ -35,7 +43,7 @@ export default function BranchList({ branches, onEdit, onDelete }: Props) {
         >
           <div
             style={{ margin: 0, marginBottom: "0.5rem" }}
-            dangerouslySetInnerHTML={{ __html: unescapeHtml(branch.content) }}
+            dangerouslySetInnerHTML={renderBranchContent(branch.content)}
           />
 
           <div className="actions" style={{ display: "flex", gap: "0.5rem" }}>
