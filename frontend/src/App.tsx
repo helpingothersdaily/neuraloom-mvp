@@ -8,7 +8,7 @@ import BranchDetail from "./pages/BranchDetail";
 import BranchListPage from "./pages/BranchListPage";
 import NestsList from "./nests/NestsList";
 import NestDetail from "./nests/NestDetail";
-import SimpleEditor from "./components/SimpleEditor";
+import WysiwygEditor from "./components/WysiwygEditor";
 import "./App.css";
 
 export default function App() {
@@ -220,11 +220,9 @@ export default function App() {
                   marginBottom: "0.5rem",
                   maxHeight: "4.5rem",
                   overflow: "hidden",
-                  whiteSpace: "pre-wrap",
                 }}
-              >
-                {seed.description}
-              </div>
+                dangerouslySetInnerHTML={{ __html: seed.description }}
+              />
             )}
             <div style={{ fontSize: "0.8rem", color: "#999" }}>
               {new Date(seed.createdAt).toLocaleString()}
@@ -276,7 +274,7 @@ export default function App() {
               }}
             />
 
-            <SimpleEditor
+            <WysiwygEditor
               value={editDescription}
               onChange={setEditDescription}
               id={`seed-description-${seed.id}`}

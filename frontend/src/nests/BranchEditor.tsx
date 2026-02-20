@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SimpleEditor from "../components/SimpleEditor";
+import WysiwygEditor from "../components/WysiwygEditor";
 
 interface Props {
   initialValue?: string;
@@ -12,7 +12,7 @@ export default function BranchEditor({ initialValue = "", onSave, onCancel }: Pr
 
   return (
     <div className="branch-editor" style={{ marginTop: "1rem", padding: "1rem", background: "#f9f9f9", borderRadius: "8px" }}>
-      <SimpleEditor
+      <WysiwygEditor
         value={content}
         onChange={setContent}
         id="branch-content"

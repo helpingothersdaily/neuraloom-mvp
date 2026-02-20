@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Tree, { TreeNode } from "./Tree";
-import SimpleEditor from "../components/SimpleEditor";
+import WysiwygEditor from "../components/WysiwygEditor";
 
 interface NestData {
   id: string;
@@ -117,7 +117,7 @@ export default function NestDetail() {
             onChange={(e) => setEditTitle(e.target.value)}
             style={{ width: "100%", marginBottom: "0.75rem", padding: "0.5rem", fontSize: "1rem" }}
           />
-          <SimpleEditor
+          <WysiwygEditor
             value={editDescription}
             onChange={setEditDescription}
             placeholder="Describe this nest..."
@@ -127,7 +127,7 @@ export default function NestDetail() {
       ) : (
         <>
           <h3>{nest.title || "Untitled Nest"}</h3>
-          <div style={{ whiteSpace: "pre-wrap" }}>{nest.description}</div>
+          <div dangerouslySetInnerHTML={{ __html: nest.description }} />
         </>
       )}
 

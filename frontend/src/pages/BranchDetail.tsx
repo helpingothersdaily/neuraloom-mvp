@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import BranchNotFound from "../nests/BranchNotFound";
 import Tree, { TreeNode } from "../nests/Tree";
-import SimpleEditor from "../components/SimpleEditor";
+import WysiwygEditor from "../components/WysiwygEditor";
 
 interface BranchData {
   id: string;
@@ -108,16 +108,14 @@ export default function BranchDetail() {
       <h2>Branch Details</h2>
 
       {isEditing ? (
-        <SimpleEditor
+        <WysiwygEditor
           value={editContent}
           onChange={setEditContent}
           placeholder="Write your branch..."
           minHeight="140px"
         />
       ) : (
-        <div className="branch-content" style={{ whiteSpace: "pre-wrap" }}>
-          {branch.content}
-        </div>
+        <div className="branch-content" dangerouslySetInnerHTML={{ __html: branch.content }} />
       )}
 
       <p className="timestamp">

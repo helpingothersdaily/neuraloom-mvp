@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import SimpleEditor from "../components/SimpleEditor";
+import WysiwygEditor from "../components/WysiwygEditor";
 
 export default function NestEditor() {
   const { id } = useParams();
@@ -51,7 +51,7 @@ export default function NestEditor() {
       <input id="nest-title" name="nestTitle" value={title} onChange={(e) => setTitle(e.target.value)} />
 
       <label>Description</label>
-      <SimpleEditor
+      <WysiwygEditor
         value={description}
         onChange={setDescription}
         id="nest-description"
