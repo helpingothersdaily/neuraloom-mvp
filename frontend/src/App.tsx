@@ -212,7 +212,7 @@ export default function App() {
             <div style={{ fontSize: "1rem", marginBottom: "0.5rem", fontWeight: 500 }}>
               {seed.title}
             </div>
-            {seed.description?.trim() && (
+            {selectedSeedId !== seed.id && seed.description?.trim() && (
               <div
                 style={{
                   fontSize: "0.9rem",
