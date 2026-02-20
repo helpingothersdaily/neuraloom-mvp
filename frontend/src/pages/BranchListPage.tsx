@@ -23,8 +23,8 @@ export default function BranchListPage() {
   const location = useLocation();
 
   useEffect(() => {
-    // Fetch all seeds first to get their branches
-    fetch("/api/seeds")
+    // Fetch all nests (seeds) first to get their branches
+    fetch("/api/nests")
       .then((res) => res.json())
       .then(async (data) => {
         const seedList = data.data || data || [];
