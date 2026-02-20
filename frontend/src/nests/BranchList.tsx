@@ -1,5 +1,12 @@
+
 import { Link } from "react-router-dom";
 import { Branch } from "../services/branches";
+
+function unescapeHtml(html: string): string {
+  const doc = document.createElement("textarea");
+  doc.innerHTML = html;
+  return doc.value;
+}
 
 interface Props {
   branches: Branch[];
@@ -28,7 +35,7 @@ export default function BranchList({ branches, onEdit, onDelete }: Props) {
         >
           <div
             style={{ margin: 0, marginBottom: "0.5rem" }}
-            dangerouslySetInnerHTML={{ __html: branch.content }}
+            dangerouslySetInnerHTML={{ __html: unescapeHtml(branch.content) }}
           />
 
           <div className="actions" style={{ display: "flex", gap: "0.5rem" }}>
