@@ -1,5 +1,3 @@
-import { useRef } from "react";
-
 interface SimpleEditorProps {
   value: string;
   onChange: (nextValue: string) => void;
@@ -13,20 +11,24 @@ export default function SimpleEditor({
   placeholder = "Write here...",
   minHeight = "100px",
 }: SimpleEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
   return (
     <div>
+      <div style={{ fontSize: "0.85rem", color: "#666", marginBottom: "0.25rem" }}>Editor</div>
       <textarea
-        ref={textareaRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         style={{
           width: "100%",
-          padding: "0.5rem",
+          padding: "0.65rem",
           minHeight,
           fontSize: "0.9rem",
+          border: "1px solid #ccc",
+          borderRadius: "6px",
+          background: "#fff",
+          color: "#222",
+          resize: "vertical",
+          boxSizing: "border-box",
         }}
       />
 
