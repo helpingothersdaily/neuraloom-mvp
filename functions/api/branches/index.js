@@ -1,4 +1,4 @@
-import { getBranchesBySeed, getBranchesByComponent, getSubBranches, createBranch } from "../_store.js";
+import { getBranchesBySeed, getBranchesByNest, getSubBranches, getBranch, createBranch } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,11 +23,11 @@ export async function onRequest(context) {
   }
 
   try {
-    // GET /api/branches?seedId=xxx or ?componentId=xxx or ?parentBranchId=xxx
+    // GET /api/branches?seedId=xxx or ?nestId=xxx or ?parentBranchId=xxx
     if (request.method === "GET") {
       const url = new URL(request.url);
       const seedId = url.searchParams.get("seedId");
-      const componentId = url.searchParams.get("componentId");
+      const nestId = url.searchParams.get("nestId");
       const parentBranchId = url.searchParams.get("parentBranchId");
 
       if (parentBranchId) {
@@ -35,13 +35,13 @@ export async function onRequest(context) {
         return jsonResponse({ success: true, data: branches });
       }
 
-      if (componentId) {
-        const branches = getBranchesByComponent(componentId);
+      if (nestId) {
+        const branches = getBranchesByNest(nestId);
         return jsonResponse({ success: true, data: branches });
       }
 
       if (!seedId) {
-        return jsonResponse({ success: false, error: "seedId, componentId, or parentBranchId is required" }, 400);
+        return jsonResponse({ success: false, error: "seedId, nestId, or parentBranchId is required" }, 400);
       }
 
       const branches = getBranchesBySeed(seedId);
@@ -51,13 +51,22 @@ export async function onRequest(context) {
     // POST /api/branches
     if (request.method === "POST") {
       const body = await request.json();
-      const { seedId, content, parentBranchId } = body;
+      let { seedId, content, parentBranchId, title, nestId } = body;
 
-      if (!seedId || !content) {
-        return jsonResponse({ success: false, error: "seedId and content required" }, 400);
+      // If parentBranchId is provided, inherit seedId from parent
+      if (parentBranchId && !seedId) {
+        const parent = getBranch(parentBranchId);
+        if (parent) {
+          seedId = parent.seedId;
+        }
       }
 
-      const branch = createBranch({ seedId, content, parentBranchId });
+      // content can be empty string, just needs seedId
+      if (!seedId) {
+        return jsonResponse({ success: false, error: "seedId required (or parentBranchId with valid parent)" }, 400);
+      }
+
+      const branch = createBranch({ seedId, content: content || "", parentBranchId, title, nestId });
       return jsonResponse({ success: true, data: branch }, 201);
     }
 

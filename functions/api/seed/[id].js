@@ -1,4 +1,4 @@
-import { loadComponents, saveComponents } from "../_store.js";
+import { loadNests, saveNests } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,7 +17,7 @@ function jsonResponse(data, status = 200) {
 export async function onRequest(context) {
   const request = context.request;
   // Get ID from URL params (Cloudflare Pages provides this via context.params)
-  const componentId = context.params.id;
+  const nestId = context.params.id;
 
   // Handle preflight
   if (request.method === "OPTIONS") {
@@ -26,26 +26,26 @@ export async function onRequest(context) {
 
   try {
     if (request.method === "GET") {
-      const components = loadComponents();
-      const component = components.find((c) => c.id === componentId);
+      const nests = loadNests();
+      const nest = nests.find((n) => n.id === nestId);
 
-      if (!component) {
+      if (!nest) {
         return jsonResponse(
-          { success: false, error: "Component not found" },
+          { success: false, error: "Nest not found" },
           404
         );
       }
 
-      return jsonResponse({ success: true, data: component });
+      return jsonResponse({ success: true, data: nest });
     }
 
     if (request.method === "PUT") {
-      const components = loadComponents();
-      const index = components.findIndex((c) => c.id === componentId);
+      const nests = loadNests();
+      const index = nests.findIndex((n) => n.id === nestId);
 
       if (index === -1) {
         return jsonResponse(
-          { success: false, error: "Component not found" },
+          { success: false, error: "Nest not found" },
           404
         );
       }
@@ -53,36 +53,36 @@ export async function onRequest(context) {
       const body = await request.json();
       const { title, description, category } = body;
       const updated = {
-        ...components[index],
+        ...nests[index],
         ...(title !== undefined && { title }),
         ...(description !== undefined && { description }),
         ...(category !== undefined && { category }),
         updatedAt: new Date().toISOString(),
       };
 
-      components[index] = updated;
-      saveComponents(components);
+      nests[index] = updated;
+      saveNests(nests);
 
       return jsonResponse({ success: true, data: updated });
     }
 
     if (request.method === "DELETE") {
-      const components = loadComponents();
-      const index = components.findIndex((c) => c.id === componentId);
+      const nests = loadNests();
+      const index = nests.findIndex((n) => n.id === nestId);
 
       if (index === -1) {
         return jsonResponse(
-          { success: false, error: "Component not found" },
+          { success: false, error: "Nest not found" },
           404
         );
       }
 
-      const [deleted] = components.splice(index, 1);
-      saveComponents(components);
+      const [deleted] = nests.splice(index, 1);
+      saveNests(nests);
 
       return jsonResponse({
         success: true,
-        message: "Component deleted",
+        message: "Nest deleted",
         data: deleted,
       });
     }

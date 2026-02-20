@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import BranchList from "../components/BranchList";
-import BranchEditor from "../components/BranchEditor";
+import BranchList from "../nests/BranchList";
+import BranchEditor from "../nests/BranchEditor";
 
 import {
   Branch,
@@ -84,6 +84,12 @@ export default function SeedDetail({ seedId }: Props) {
           onEdit={setEditingBranch}
           onDelete={handleDelete}
         />
+      )}
+
+      {!loading && branches.length > 0 && !branches.some((b) => b.nestId) && (
+        <p style={{ color: "#666", fontStyle: "italic", marginTop: "0.75rem" }}>
+          This seed has no nests connected yet
+        </p>
       )}
 
       {editingBranch && (

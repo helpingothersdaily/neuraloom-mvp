@@ -1,8 +1,8 @@
-import { getComponent, updateComponent, deleteComponent } from "../_store.js";
+import { getNestById, updateNest, deleteNest } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET,PUT,DELETE,OPTIONS",
+  "Access-Control-Allow-Methods": "GET,PATCH,PUT,DELETE,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Content-Type": "application/json",
 };
@@ -16,7 +16,7 @@ function jsonResponse(data, status = 200) {
 
 export async function onRequest(context) {
   const request = context.request;
-  const componentId = context.params.id;
+  const nestId = context.params.id;
 
   // Handle CORS preflight
   if (request.method === "OPTIONS") {
@@ -24,40 +24,40 @@ export async function onRequest(context) {
   }
 
   try {
-    // GET /api/components/:id
+    // GET /api/nests/:id
     if (request.method === "GET") {
-      const component = getComponent(componentId);
+      const nest = getNestById(nestId);
 
-      if (!component) {
-        return jsonResponse({ success: false, error: "Component not found" }, 404);
+      if (!nest) {
+        return jsonResponse({ success: false, error: "Nest not found" }, 404);
       }
 
-      return jsonResponse({ success: true, data: component });
+      return jsonResponse({ success: true, data: nest });
     }
 
-    // PUT /api/components/:id
-    if (request.method === "PUT") {
+    // PATCH /api/nests/:id
+    if (request.method === "PATCH" || request.method === "PUT") {
       const body = await request.json();
       const { title, description, branchIds } = body;
 
-      const updated = updateComponent(componentId, { title, description, branchIds });
+      const updated = updateNest(nestId, { title, description, branchIds });
 
       if (!updated) {
-        return jsonResponse({ success: false, error: "Component not found" }, 404);
+        return jsonResponse({ success: false, error: "Nest not found" }, 404);
       }
 
       return jsonResponse({ success: true, data: updated });
     }
 
-    // DELETE /api/components/:id
+    // DELETE /api/nests/:id
     if (request.method === "DELETE") {
-      const success = deleteComponent(componentId);
+      const success = deleteNest(nestId);
 
       if (!success) {
-        return jsonResponse({ success: false, error: "Component not found" }, 404);
+        return jsonResponse({ success: false, error: "Nest not found" }, 404);
       }
 
-      return jsonResponse({ success: true, message: "Component deleted" });
+      return jsonResponse({ success: true, message: "Nest deleted" });
     }
 
     return jsonResponse({ success: false, error: "Method not allowed" }, 405);

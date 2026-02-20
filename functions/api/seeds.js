@@ -1,4 +1,4 @@
-import { loadComponents, saveComponents } from "./_store.js";
+import { loadNests, saveNests } from "./_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,8 +25,8 @@ export async function onRequest(context) {
   try {
     // GET /api/seeds
     if (request.method === "GET") {
-      const components = loadComponents();
-      return jsonResponse({ success: true, data: components });
+      const nests = loadNests();
+      return jsonResponse({ success: true, data: nests });
     }
 
     // POST /api/seeds
@@ -41,8 +41,8 @@ export async function onRequest(context) {
         );
       }
 
-      const components = loadComponents();
-      const newComponent = {
+      const nests = loadNests();
+      const newNest = {
         id: Date.now().toString(),
         title,
         description: description || "",
@@ -51,10 +51,10 @@ export async function onRequest(context) {
         updatedAt: new Date().toISOString(),
       };
 
-      components.push(newComponent);
-      saveComponents(components);
+      nests.push(newNest);
+      saveNests(nests);
 
-      return jsonResponse({ success: true, data: newComponent }, 201);
+      return jsonResponse({ success: true, data: newNest }, 201);
     }
 
     // Unsupported method

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ComponentEditor() {
+export default function NestEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ export default function ComponentEditor() {
 
   useEffect(() => {
     if (isEditing) {
-      fetch(`/api/components/${id}`)
+      fetch(`/api/nests/${id}`)
         .then((res) => res.json())
         .then((data) => {
           const c = data.data || data;
@@ -26,25 +26,25 @@ export default function ComponentEditor() {
     const payload = { title, description };
 
     if (isEditing) {
-      await fetch(`/api/components/${id}`, {
+      await fetch(`/api/nests/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
     } else {
-      await fetch("/api/components", {
+      await fetch("/api/nests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
     }
 
-    navigate("/components");
+    navigate("/nests");
   };
 
   return (
-    <div className="component-editor">
-      <h2>{isEditing ? "Edit Component" : "New Component"}</h2>
+    <div className="nest-editor">
+      <h2>{isEditing ? "Edit Nest" : "New Nest"}</h2>
 
       <label>Title</label>
       <input value={title} onChange={(e) => setTitle(e.target.value)} />

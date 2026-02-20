@@ -38,10 +38,10 @@ export async function onRequest(context) {
     // PUT /api/branches/:id
     if (request.method === "PUT") {
       const body = await request.json();
-      const { content, componentId } = body;
+      const { content, nestId } = body;
 
-      // Allow updating content and/or componentId
-      const updated = updateBranch(branchId, { content, componentId });
+      // Allow updating content and/or nestId
+      const updated = updateBranch(branchId, { content, nestId });
 
       if (!updated) {
         return jsonResponse({ success: false, error: "Branch not found" }, 404);

@@ -1,14 +1,20 @@
 console.log(">>> USING SEED DETAIL WITH BRANCHING");
 import { useState, useEffect, useRef } from "react";
-import { Component, api } from "./api";
-import { componentsService } from "./services/components.service";
+import { Routes, Route, Link } from "react-router-dom";
+import { Nest, nestApi } from "./api";
+import { nestService } from "./services/nest.service";
 import SeedDetail from "./pages/SeedDetail";
+import BranchDetail from "./pages/BranchDetail";
+import BranchListPage from "./pages/BranchListPage";
+import NestsList from "./nests/NestsList";
+import NestDetail from "./nests/NestDetail";
+import NestEditor from "./nests/NestEditor";
 import "./App.css";
 
 export default function App() {
-  console.log("✓ App component mounted");
+  console.log("✓ App mounted");
   const [title, setTitle] = useState("");
-  const [seeds, setSeeds] = useState<Component[]>([]);
+  const [seeds, setSeeds] = useState<Nest[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -18,7 +24,7 @@ export default function App() {
   const [editDescription, setEditDescription] = useState("");
   const seedRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Fetch all components on mount
+  // Fetch all nests on mount
   useEffect(() => {
     loadSeeds();
   }, []);
@@ -27,10 +33,10 @@ export default function App() {
     try {
       setLoading(true);
       setError(null);
-      const components = await componentsService.loadAll();
-      setSeeds(components);
+      const nests = await nestService.getAllNests();
+      setSeeds(nests);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load components";
+      const message = err instanceof Error ? err.message : "Failed to load nests";
       setError(message);
     } finally {
       setLoading(false);
@@ -44,7 +50,7 @@ export default function App() {
 
   try {
     setError(null);
-    const newSeed = await componentsService.createComponent(trimmed);
+    const newSeed = await nestService.createNest(trimmed);
 
     setSeeds((prev) => [newSeed, ...prev]);
     setNewSeedId(newSeed.id); // Set immediately so card starts with pulse class
@@ -53,7 +59,7 @@ export default function App() {
     // Remove class after animation completes
     setTimeout(() => setNewSeedId(null), 300);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to create component";
+    const message = err instanceof Error ? err.message : "Failed to create nest";
     setError(message);
   }
 };
@@ -62,20 +68,20 @@ export default function App() {
     try {
       setError(null);
       setDeletingId(id); // start fade-out
-      await api.delete(id);
+      await nestApi.deleteNest(id);
       // allow CSS fade-out to complete before removing from DOM
       setTimeout(() => {
         setSeeds((prev) => prev.filter((seed) => seed.id !== id));
         setDeletingId(null);
       }, 300);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to delete component";
+      const message = err instanceof Error ? err.message : "Failed to delete nest";
       setError(message);
       setDeletingId(null); // revert if failed
     }
   };
 
-  const openSeed = (seed: Component) => {
+  const openSeed = (seed: Nest) => {
     setSelectedSeedId(seed.id);
     setEditTitle(seed.title);
     setEditDescription(seed.description || "");
@@ -87,7 +93,7 @@ export default function App() {
 
   const saveSeed = async (id: string) => {
     try {
-      const updated = await api.update(id, {
+      const updated = await nestApi.updateNest(id, {
         title: editTitle,
         description: editDescription,
       });
@@ -106,8 +112,23 @@ export default function App() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "Inter, sans-serif", maxWidth: 600, margin: "0 auto" }}>
-      <h1> Welcome to Neuraloom 👋</h1>
-      <p>Clarity starts here.</p>
+      <nav style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+        <Link to="/">Seeds</Link>
+        <Link to="/branches">Branches</Link>
+        <Link to="/nests">Nest Habitat</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/branches" element={<BranchListPage />} />
+        <Route path="/branches/:id" element={<BranchDetail />} />
+        <Route path="/nests" element={<NestsList />} />
+        <Route path="/nests/new" element={<NestEditor />} />
+        <Route path="/nests/:id" element={<NestDetail />} />
+        <Route path="/nests/:id/edit" element={<NestEditor />} />
+        <Route path="/" element={
+          <>
+            <h1> Welcome to Neuraloom 👋</h1>
+            <p>Clarity starts here.</p>
 
       {error && (
         <div style={{ padding: "1rem", marginTop: "1rem", background: "#fee", border: "1px solid #f99", borderRadius: "8px", color: "#c33", fontSize: "0.9rem" }}>
@@ -287,7 +308,9 @@ export default function App() {
     ))}
   </div>
 </div>
-
+          </>
+        } />
+      </Routes>
     </div>
   );
 }

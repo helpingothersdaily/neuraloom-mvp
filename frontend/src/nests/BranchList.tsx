@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Branch } from "../services/branches";
 
@@ -31,6 +32,20 @@ export default function BranchList({ branches, onEdit, onDelete }: Props) {
           </div>
 
           <div className="actions" style={{ display: "flex", gap: "0.5rem" }}>
+            <Link
+              to={`/branches/${branch.id}`}
+              style={{
+                padding: "0.25rem 0.75rem",
+                fontSize: "0.85rem",
+                background: "#e8f4fc",
+                border: "1px solid #b3d9f2",
+                borderRadius: "4px",
+                textDecoration: "none",
+                color: "#1a73e8",
+              }}
+            >
+              View
+            </Link>
             <button
               onClick={() => onEdit(branch)}
               style={{

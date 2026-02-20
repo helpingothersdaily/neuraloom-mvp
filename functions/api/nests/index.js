@@ -1,4 +1,4 @@
-import { getComponents, createComponent } from "../_store.js";
+import { getAllNests, createNest } from "../_store.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,13 +23,13 @@ export async function onRequest(context) {
   }
 
   try {
-    // GET /api/components
+    // GET /api/nests
     if (request.method === "GET") {
-      const components = getComponents();
-      return jsonResponse({ success: true, data: components });
+      const nests = getAllNests();
+      return jsonResponse({ success: true, data: nests });
     }
 
-    // POST /api/components
+    // POST /api/nests
     if (request.method === "POST") {
       const body = await request.json();
       const { title, description, branchIds } = body;
@@ -38,8 +38,8 @@ export async function onRequest(context) {
         return jsonResponse({ success: false, error: "title is required" }, 400);
       }
 
-      const component = createComponent({ title, description, branchIds });
-      return jsonResponse({ success: true, data: component }, 201);
+      const nest = createNest({ title, description, branchIds });
+      return jsonResponse({ success: true, data: nest }, 201);
     }
 
     return jsonResponse({ success: false, error: "Method not allowed" }, 405);

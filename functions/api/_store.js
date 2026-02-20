@@ -1,27 +1,27 @@
 // In-memory data store for Cloudflare Workers
 // For production, upgrade to Cloudflare KV (https://developers.cloudflare.com/kv/)
 
-const DEFAULT_COMPONENTS = [
+const DEFAULT_NESTS = [
   {
     id: "1",
-    title: "Example Component",
-    description: "This is an example component",
+    title: "Example Nest",
+    description: "This is an example nest",
     category: "general",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
 ];
 
-let store = [...DEFAULT_COMPONENTS];
+let store = [...DEFAULT_NESTS];
 let branchStore = [];
-let componentStore = [];
+let nestStore = [];
 
-export function loadComponents() {
+export function loadNests() {
   return store;
 }
 
-export function saveComponents(components) {
-  store = components;
+export function saveNests(nests) {
+  store = nests;
 }
 
 // --- BRANCHES ---
@@ -34,12 +34,13 @@ export function getBranch(id) {
   return branchStore.find((b) => b.id === id);
 }
 
-export function createBranch({ seedId, content, parentBranchId = null }) {
+export function createBranch({ seedId, content, parentBranchId = null, title = null, nestId = null }) {
   const branch = {
     id: Date.now().toString(),
     seedId,
-    content,
-    componentId: null,
+    title: title || null,
+    content: content || "",
+    nestId,
     parentBranchId,
     createdAt: Date.now(),
     updatedAt: Date.now(),
@@ -48,8 +49,8 @@ export function createBranch({ seedId, content, parentBranchId = null }) {
   return branch;
 }
 
-export function getBranchesByComponent(componentId) {
-  return branchStore.filter((b) => b.componentId === componentId);
+export function getBranchesByNest(nestId) {
+  return branchStore.filter((b) => b.nestId === nestId);
 }
 
 export function getSubBranches(parentBranchId) {
@@ -65,9 +66,17 @@ export function updateBranch(id, data) {
     branch.content = data;
   } else {
     branch.content = data.content ?? branch.content;
-    branch.componentId = data.componentId ?? branch.componentId;
+    branch.nestId = data.nestId ?? branch.nestId;
     branch.parentBranchId = data.parentBranchId ?? branch.parentBranchId;
   }
+  branch.updatedAt = Date.now();
+  return branch;
+}
+
+export function connectBranchToNest(branchId, nestId) {
+  const branch = getBranch(branchId);
+  if (!branch) return null;
+  branch.nestId = nestId;
   branch.updatedAt = Date.now();
   return branch;
 }
@@ -80,18 +89,18 @@ export function deleteBranch(id) {
   return true;
 }
 
-// --- COMPONENTS (branch compositions) ---
+// --- NESTS (branch compositions) ---
 
-export function getComponents() {
-  return componentStore;
+export function getAllNests() {
+  return nestStore;
 }
 
-export function getComponent(id) {
-  return componentStore.find((c) => c.id === id);
+export function getNestById(id) {
+  return nestStore.find((n) => n.id === id);
 }
 
-export function createComponent(data) {
-  const component = {
+export function createNest(data) {
+  const nest = {
     id: Date.now().toString(),
     title: data.title || "",
     description: data.description || "",
@@ -99,25 +108,26 @@ export function createComponent(data) {
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
-  componentStore.push(component);
-  return component;
+  nestStore.push(nest);
+  return nest;
 }
 
-export function updateComponent(id, data) {
-  const component = getComponent(id);
-  if (!component) return null;
+export function updateNest(id, data) {
+  const nest = getNestById(id);
+  if (!nest) return null;
 
-  component.title = data.title ?? component.title;
-  component.description = data.description ?? component.description;
-  component.branchIds = data.branchIds ?? component.branchIds;
-  component.updatedAt = Date.now();
+  nest.title = data.title ?? nest.title;
+  nest.description = data.description ?? nest.description;
+  nest.branchIds = data.branchIds ?? nest.branchIds;
+  nest.updatedAt = Date.now();
 
-  return component;
+  return nest;
 }
 
-export function deleteComponent(id) {
-  const index = componentStore.findIndex((c) => c.id === id);
+export function deleteNest(id) {
+  const index = nestStore.findIndex((n) => n.id === id);
   if (index === -1) return false;
-  componentStore.splice(index, 1);
+  nestStore.splice(index, 1);
   return true;
 }
+

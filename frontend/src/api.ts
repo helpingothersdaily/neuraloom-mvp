@@ -1,6 +1,6 @@
 const API_URL = "/api";
 
-export interface Component {
+export interface Nest {
   id: string;
   title: string;
   description: string;
@@ -24,29 +24,29 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return json.data || json;
 }
 
-export const api = {
-  async getAll(): Promise<Component[]> {
-    const url = `${API_URL}/seeds`;
+export const nestApi = {
+  async getAllNests(): Promise<Nest[]> {
+    const url = `${API_URL}/nests`;
     console.log("Fetching:", url);
     try {
       const response = await fetch(url);
       console.log("Response status:", response.status);
       return handleResponse(response);
     } catch (error) {
-      console.error("Failed to fetch components:", error);
+      console.error("Failed to fetch nests:", error);
       throw new Error(`Cannot connect to API at ${API_URL}.`);
     }
   },
 
-  async getById(id: string): Promise<Component> {
-    const response = await fetch(`${API_URL}/seed/${id}`);
+  async getNestById(id: string): Promise<Nest> {
+    const response = await fetch(`${API_URL}/nests/${id}`);
     return handleResponse(response);
   },
 
-  async create(title: string, description = "", category = "general"): Promise<Component> {
-    const url = `${API_URL}/seeds`;
+  async createNest(title: string, description = "", category = "general"): Promise<Nest> {
+    const url = `${API_URL}/nests`;
     const payload = { title, description, category };
-    console.log("Creating component at:", url, payload);
+    console.log("Creating nest at:", url, payload);
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -56,22 +56,22 @@ export const api = {
       console.log("Create response status:", response.status);
       return handleResponse(response);
     } catch (error) {
-      console.error("Failed to create component:", error);
+      console.error("Failed to create nest:", error);
       throw new Error(`Cannot reach API at ${API_URL}`);
     }
   },
 
-  async update(id: string, updates: Partial<Component>): Promise<Component> {
-    const response = await fetch(`${API_URL}/seed/${id}`, {
-      method: "PUT",
+  async updateNest(id: string, updates: Partial<Nest>): Promise<Nest> {
+    const response = await fetch(`${API_URL}/nests/${id}`, {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
     });
     return handleResponse(response);
   },
 
-  async delete(id: string): Promise<Component> {
-    const response = await fetch(`${API_URL}/seed/${id}`, {
+  async deleteNest(id: string): Promise<Nest> {
+    const response = await fetch(`${API_URL}/nests/${id}`, {
       method: "DELETE",
     });
     return handleResponse(response);

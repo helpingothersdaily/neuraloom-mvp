@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-import BranchNotFound from "../components/BranchNotFound";
-import Tree, { TreeNode } from "../components/Tree";
+import BranchNotFound from "../nests/BranchNotFound";
+import Tree, { TreeNode } from "../nests/Tree";
 
 interface BranchData {
   id: string;
   seedId: string;
   content: string;
   title?: string;
-  componentId: string | null;
+  nestId: string | null;
   createdAt: number;
   updatedAt: number;
 }
 
-interface ComponentData {
+interface NestData {
   id: string;
   title: string;
 }
@@ -25,7 +25,7 @@ export default function BranchDetail() {
   const navigate = useNavigate();
 
   const [branch, setBranch] = useState<BranchData | null>(null);
-  const [components, setComponents] = useState<ComponentData[]>([]);
+  const [nests, setNests] = useState<NestData[]>([]);
   const [subBranches, setSubBranches] = useState<BranchData[]>([]);
   const [notFound, setNotFound] = useState(false);
 
@@ -44,9 +44,9 @@ export default function BranchDetail() {
   }, [branchId]);
 
   useEffect(() => {
-    fetch("/api/components")
+    fetch("/api/nests")
       .then((res) => res.json())
-      .then((data) => setComponents(data.data || []));
+      .then((data) => setNests(data.data || []));
   }, []);
 
   useEffect(() => {
@@ -65,22 +65,22 @@ export default function BranchDetail() {
     return <p>Loading...</p>;
   }
 
-  const handlePromoteToComponent = async () => {
+  const handlePromoteToNest = async () => {
     const payload = {
-      title: branch.title || "New Component",
+      title: branch.title || "New Nest",
       description: branch.content || "",
       branchIds: [branch.id],
     };
 
-    const res = await fetch("/api/components", {
+    const res = await fetch("/api/nests", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
     const result = await res.json();
-    const newComponent = result.data || result;
-    navigate(`/components/${newComponent.id}`);
+    const newNest = result.data || result;
+    navigate(`/nests/${newNest.id}`);
   };
 
   return (
@@ -95,37 +95,42 @@ export default function BranchDetail() {
         Created: {new Date(branch.createdAt).toLocaleString()}
       </p>
 
-      <div className="link-to-component" style={{ marginTop: "1rem" }}>
+      <div className="link-to-nest" style={{ marginTop: "1rem" }}>
         <label style={{ display: "block", marginBottom: "0.5rem" }}>
-          Link to Component:
+          Nest Connections
         </label>
         <select
-          value={branch.componentId || ""}
+          value={branch.nestId || ""}
           onChange={async (e) => {
-            const newComponentId = e.target.value || null;
+            const newNestId = e.target.value || null;
 
             await fetch(`/api/branches/${branch.id}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ componentId: newComponentId }),
+              body: JSON.stringify({ nestId: newNestId }),
             });
 
-            setBranch({ ...branch, componentId: newComponentId });
+            setBranch({ ...branch, nestId: newNestId });
           }}
           style={{ padding: "0.5rem", minWidth: "200px" }}
         >
-          <option value="">— No Component —</option>
-          {components.map((c) => (
+          <option value="">— No Nest —</option>
+          {nests.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.title || "Untitled Component"}
+              {c.title || "Untitled Nest"}
             </option>
           ))}
         </select>
+        {!branch.nestId && (
+          <p style={{ marginTop: "0.5rem", color: "#666" }}>
+            This branch isn’t part of any nests yet
+          </p>
+        )}
       </div>
 
       <div className="actions" style={{ marginTop: "1rem" }}>
-        <button onClick={handlePromoteToComponent}>
-          Promote to Component
+        <button onClick={handlePromoteToNest}>
+          Let this Branch form a Nest
         </button>
       </div>
 
@@ -143,12 +148,21 @@ export default function BranchDetail() {
       />
 
       <button
+        style={{
+          marginTop: "1rem",
+          padding: "0.5rem 1rem",
+          background: "#4a6cf7",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
         onClick={async () => {
           const payload = {
             title: "New Sub-branch",
             content: "",
             parentBranchId: branch.id,
-            componentId: branch.componentId || null,
+            nestId: branch.nestId || null,
           };
 
           const res = await fetch("/api/branches", {

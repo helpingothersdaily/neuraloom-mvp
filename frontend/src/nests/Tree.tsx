@@ -1,4 +1,4 @@
-// src/components/Tree.tsx
+// src/nests/Tree.tsx
 
 export interface TreeNode {
   label: string;
