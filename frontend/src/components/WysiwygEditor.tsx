@@ -104,9 +104,11 @@ export default function WysiwygEditor({
           boxSizing: "border-box",
           outline: "none",
           direction: "ltr",
-          unicodeBidi: "bidi-override",
+          unicodeBidi: "normal",
           textAlign: "left",
           writingMode: "horizontal-tb",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
         }}
         dangerouslySetInnerHTML={{ __html: value || "" }}
         aria-labelledby={emptyPlaceholderId}
