@@ -9,6 +9,7 @@ import BranchDetail from "./pages/BranchDetail";
 import BranchListPage from "./pages/BranchListPage";
 import NestsList from "./nests/NestsList";
 import NestDetail from "./nests/NestDetail";
+import SimpleEditor from "./components/SimpleEditor";
 import "./App.css";
 
 export default function App() {
@@ -277,15 +278,11 @@ export default function App() {
               }}
             />
 
-            <textarea
+            <SimpleEditor
               value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "0.5rem",
-                minHeight: "80px",
-                fontSize: "0.9rem",
-              }}
+              onChange={setEditDescription}
+              placeholder="Describe your seed..."
+              minHeight="80px"
             />
 
             <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem" }}>
