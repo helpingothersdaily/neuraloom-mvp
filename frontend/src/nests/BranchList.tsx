@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import { Branch } from "../services/branches";
 
 interface Props {
@@ -27,8 +26,8 @@ export default function BranchList({ branches, onEdit, onDelete }: Props) {
             marginBottom: "0.75rem",
           }}
         >
-          <div style={{ margin: 0, marginBottom: "0.5rem" }}>
-            <ReactMarkdown>{branch.content}</ReactMarkdown>
+          <div style={{ margin: 0, marginBottom: "0.5rem", whiteSpace: "pre-wrap" }}>
+            {branch.content}
           </div>
 
           <div className="actions" style={{ display: "flex", gap: "0.5rem" }}>

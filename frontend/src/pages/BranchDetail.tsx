@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 
 import BranchNotFound from "../nests/BranchNotFound";
 import Tree, { TreeNode } from "../nests/Tree";
@@ -87,8 +86,8 @@ export default function BranchDetail() {
     <div className="branch-detail">
       <h2>Branch Details</h2>
 
-      <div className="branch-content">
-        <ReactMarkdown>{branch.content}</ReactMarkdown>
+      <div className="branch-content" style={{ whiteSpace: "pre-wrap" }}>
+        {branch.content}
       </div>
 
       <p className="timestamp">

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import SimpleEditor from "../components/SimpleEditor";
 
 export default function NestEditor() {
   const { id } = useParams();
@@ -49,11 +50,12 @@ export default function NestEditor() {
       <label>Title</label>
       <input value={title} onChange={(e) => setTitle(e.target.value)} />
 
-      <label>Description (Markdown supported)</label>
-      <textarea
-        rows={10}
+      <label>Description</label>
+      <SimpleEditor
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={setDescription}
+        placeholder="Describe this nest..."
+        minHeight="180px"
       />
 
       <button onClick={handleSave}>Save</button>

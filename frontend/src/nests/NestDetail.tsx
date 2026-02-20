@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import Tree, { TreeNode } from "./Tree";
 
 interface NestData {
@@ -87,7 +86,7 @@ export default function NestDetail() {
       <h2>Nest Habitat</h2>
       <h3>{nest.title || "Untitled Nest"}</h3>
 
-      <ReactMarkdown>{nest.description}</ReactMarkdown>
+      <div style={{ whiteSpace: "pre-wrap" }}>{nest.description}</div>
 
       <p className="timestamp">
         Created: {new Date(nest.createdAt).toLocaleString()}

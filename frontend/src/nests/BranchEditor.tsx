@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SimpleEditor from "../components/SimpleEditor";
 
 interface Props {
   initialValue?: string;
@@ -11,19 +12,11 @@ export default function BranchEditor({ initialValue = "", onSave, onCancel }: Pr
 
   return (
     <div className="branch-editor" style={{ marginTop: "1rem", padding: "1rem", background: "#f9f9f9", borderRadius: "8px" }}>
-      <textarea
+      <SimpleEditor
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={setContent}
         placeholder="Write your branch..."
-        style={{
-          width: "100%",
-          minHeight: "100px",
-          padding: "0.75rem",
-          fontSize: "1rem",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          resize: "vertical",
-        }}
+        minHeight="100px"
       />
 
       <div className="actions" style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
