@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useMemo, useRef } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 
 interface WysiwygEditorProps {
   value: string;
@@ -9,7 +9,7 @@ interface WysiwygEditorProps {
   name?: string;
 }
 
-const toolbarButtonStyle: React.CSSProperties = {
+const toolbarButtonStyle: CSSProperties = {
   padding: "0.35rem 0.65rem",
   border: "1px solid #ccc",
   borderRadius: "6px",
@@ -27,19 +27,26 @@ export default function WysiwygEditor({
   name = "wysiwygEditor",
 }: WysiwygEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
-  const emptyPlaceholderId = useMemo(() => `${id}-placeholder`, [id]);
+  const initializedRef = useRef(false);
+  const [isEmpty, setIsEmpty] = useState(true);
 
-  const normalizeDirection = () => {
-    const editor = editorRef.current;
-    if (!editor) return;
-    editor.setAttribute("dir", "ltr");
-    editor.style.direction = "ltr";
-    editor.style.unicodeBidi = "isolate";
-    editor.querySelectorAll("[dir]").forEach((node) => node.removeAttribute("dir"));
-  };
-
+  // Set initial content only once on mount
   useEffect(() => {
-    normalizeDirection();
+    const editor = editorRef.current;
+    if (!editor || initializedRef.current) return;
+    editor.innerHTML = value || "";
+    initializedRef.current = true;
+    setIsEmpty(!value || value.replace(/<[^>]*>/g, "").trim().length === 0);
+  }, []);
+
+  // Sync external value changes (e.g., reset)
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor || !initializedRef.current) return;
+    if (value === "" && editor.innerHTML !== "") {
+      editor.innerHTML = "";
+      setIsEmpty(true);
+    }
   }, [value]);
 
   const applyCommand = (command: string, commandValue?: string) => {
@@ -59,12 +66,9 @@ export default function WysiwygEditor({
   const handleInput = () => {
     const editor = editorRef.current;
     if (!editor) return;
-    const sanitized = editor.innerHTML.replace(/[\u202A-\u202E\u2066-\u2069]/g, "");
-    if (sanitized !== editor.innerHTML) {
-      editor.innerHTML = sanitized;
-    }
-    normalizeDirection();
-    onChange(editor.innerHTML);
+    const html = editor.innerHTML;
+    setIsEmpty(!html || html.replace(/<[^>]*>/g, "").trim().length === 0);
+    onChange(html);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -73,8 +77,6 @@ export default function WysiwygEditor({
     document.execCommand("insertLineBreak");
     handleInput();
   };
-
-  const showPlaceholder = !value || value.replace(/<[^>]*>/g, "").trim().length === 0;
 
   return (
     <div>
@@ -103,10 +105,8 @@ export default function WysiwygEditor({
       <div
         id={id}
         data-name={name}
-        dir="ltr"
         ref={editorRef}
         contentEditable
-        suppressContentEditableWarning
         onInput={handleInput}
         onKeyDown={handleKeyDown}
         style={{
@@ -118,21 +118,13 @@ export default function WysiwygEditor({
           borderRadius: "6px",
           background: "#fff",
           color: "#222",
-          resize: "vertical",
           boxSizing: "border-box",
           outline: "none",
-          direction: "ltr",
-          unicodeBidi: "isolate",
-          textAlign: "left",
-          writingMode: "horizontal-tb",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
+          overflowY: "auto",
         }}
-        dangerouslySetInnerHTML={{ __html: value || "" }}
-        aria-labelledby={emptyPlaceholderId}
       />
-      {showPlaceholder && (
-        <div id={emptyPlaceholderId} style={{ marginTop: "0.35rem", color: "#888", fontSize: "0.85rem" }}>
+      {isEmpty && (
+        <div style={{ marginTop: "0.35rem", color: "#888", fontSize: "0.85rem" }}>
           {placeholder}
         </div>
       )}
