@@ -104,8 +104,9 @@ export default function WysiwygEditor({
           boxSizing: "border-box",
           outline: "none",
           direction: "ltr",
-          unicodeBidi: "plaintext",
+          unicodeBidi: "bidi-override",
           textAlign: "left",
+          writingMode: "horizontal-tb",
         }}
         dangerouslySetInnerHTML={{ __html: value || "" }}
         aria-labelledby={emptyPlaceholderId}
