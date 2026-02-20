@@ -214,12 +214,17 @@ export default function App() {
             </div>
             {selectedSeedId !== seed.id && seed.description?.trim() && (
               <div
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).tagName === "A") {
+                    e.stopPropagation();
+                  }
+                }}
                 style={{
                   fontSize: "0.9rem",
                   color: "#444",
                   marginBottom: "0.5rem",
-                  maxHeight: "4.5rem",
-                  overflow: "hidden",
+                  maxHeight: "6rem",
+                  overflowY: "auto",
                 }}
                 dangerouslySetInnerHTML={{ __html: seed.description }}
               />
