@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface Branch {
   id: string;
@@ -20,6 +20,7 @@ interface Seed {
 export default function BranchListPage() {
   const [branches, setBranches] = useState<Branch[]>([]);
   const [seeds, setSeeds] = useState<Seed[]>([]);
+  const location = useLocation();
 
   useEffect(() => {
     // Fetch all seeds first to get their branches
@@ -39,7 +40,7 @@ export default function BranchListPage() {
         }
         setBranches(allBranches);
       });
-  }, []);
+  }, [location.pathname]);
 
   const getSeedTitle = (seedId: string) => {
     const seed = seeds.find((s) => s.id === seedId);
