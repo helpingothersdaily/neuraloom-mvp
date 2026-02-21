@@ -33,7 +33,19 @@ const toolbarButtonStyle: CSSProperties = {
   minHeight = "100px",
   id = "wysiwyg-editor",
   name = "wysiwygEditor",
-}: WysiwygEditorProps) {
+}: WysiwygEditorProps) { 
+  const {
+    title,
+    description,
+    setTitle,
+    setDescription,
+    onSave,
+    onCancel,
+    placeholder = "Write here...",
+    minHeight = "100px",
+    id = "wysiwyg-editor",
+    name = "wysiwygEditor",
+  } = props;
   const editorRef = useRef<HTMLDivElement>(null);
   const initializedRef = useRef(false);
   const [isEmpty, setIsEmpty] = useState(true);
