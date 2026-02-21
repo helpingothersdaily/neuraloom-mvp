@@ -1,8 +1,13 @@
+
 import { CSSProperties, useEffect, useRef, useState } from "react";
 
 interface WysiwygEditorProps {
-  value: string;
-  onChange: (nextValue: string) => void;
+  title: string;
+  description: string;
+  setTitle: (next: string) => void;
+  setDescription: (next: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
   placeholder?: string;
   minHeight?: string;
   id?: string;
@@ -18,9 +23,12 @@ const toolbarButtonStyle: CSSProperties = {
   fontSize: "0.85rem",
 };
 
-export default function WysiwygEditor({
-  value,
-  onChange,
+  title,
+  description,
+  setTitle,
+  setDescription,
+  onSave,
+  onCancel,
   placeholder = "Write here...",
   minHeight = "100px",
   id = "wysiwyg-editor",
@@ -34,27 +42,27 @@ export default function WysiwygEditor({
   useEffect(() => {
     const editor = editorRef.current;
     if (!editor || initializedRef.current) return;
-    editor.innerHTML = value || "";
+    editor.innerHTML = description || "";
     initializedRef.current = true;
-    setIsEmpty(!value || value.replace(/<[^>]*>/g, "").trim().length === 0);
+    setIsEmpty(!description || description.replace(/<[^>]*>/g, "").trim().length === 0);
   }, []);
 
-  // Sync external value changes (e.g., reset)
+  // Sync external description changes (e.g., reset)
   useEffect(() => {
     const editor = editorRef.current;
     if (!editor || !initializedRef.current) return;
-    if (value === "" && editor.innerHTML !== "") {
+    if (description === "" && editor.innerHTML !== "") {
       editor.innerHTML = "";
       setIsEmpty(true);
     }
-  }, [value]);
+  }, [description]);
 
   const applyCommand = (command: string, commandValue?: string) => {
     const editor = editorRef.current;
     if (!editor) return;
     editor.focus();
     document.execCommand(command, false, commandValue);
-    onChange(editor.innerHTML);
+    setDescription(editor.innerHTML);
   };
 
   const insertLink = () => {
@@ -68,7 +76,7 @@ export default function WysiwygEditor({
     if (!editor) return;
     const html = editor.innerHTML;
     setIsEmpty(!html || html.replace(/<[^>]*>/g, "").trim().length === 0);
-    onChange(html);
+    setDescription(html);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -80,7 +88,21 @@ export default function WysiwygEditor({
 
   return (
     <div>
-      <div style={{ fontSize: "0.85rem", color: "#666", marginBottom: "0.25rem" }}>Editor</div>
+      <div style={{ fontSize: "0.85rem", color: "#666", marginBottom: "0.25rem" }}>Edit Seed</div>
+      <input
+        type="text"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        placeholder="Seed title"
+        style={{
+          width: "100%",
+          padding: "0.5rem",
+          fontSize: "1rem",
+          borderRadius: "6px",
+          border: "1px solid #ccc",
+          marginBottom: "0.5rem",
+        }}
+      />
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
         <button type="button" onClick={() => applyCommand("bold")} style={toolbarButtonStyle}>
           Bold
@@ -128,6 +150,15 @@ export default function WysiwygEditor({
           {placeholder}
         </div>
       )}
+
+      <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
+        <button type="button" onClick={onSave} style={{ ...toolbarButtonStyle, background: "#4a6cf7", color: "white" }}>
+          Save
+        </button>
+        <button type="button" onClick={onCancel} style={{ ...toolbarButtonStyle, background: "#eee", color: "#333" }}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }
