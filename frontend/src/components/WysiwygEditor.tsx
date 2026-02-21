@@ -20,6 +20,7 @@ const toolbarButtonStyle: CSSProperties = {
   borderRadius: "6px",
   background: "#f5f5f5",
   cursor: "pointer",
+// Removed destructuring block above function signature
   fontSize: "0.85rem",
 };
 
