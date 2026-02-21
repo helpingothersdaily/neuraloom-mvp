@@ -111,9 +111,37 @@ export default function SeedDetail({ seedId }: Props) {
                         <h3 style={{ fontSize: "1rem", fontWeight: 600, margin: "0", color: "#333" }}>
                           Sub-branches
                         </h3>
+                        <button
+                          style={{
+                            marginLeft: "auto",
+                            padding: "0.5rem 1rem",
+                            background: "#4a6cf7",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setEditingBranchId("new-sub-branch-" + branch.id);
+                          }}
+                        >
+                          Add Sub-branch
+                        </button>
                       </div>
                       {/* Render only sub-branch cards for this branch */}
                       <div style={{ marginTop: "1rem" }}>
+                        {/* New Sub-branch editor */}
+                        {editingBranchId === "new-sub-branch-" + branch.id && (
+                          <BranchEditor
+                            initialTitle=""
+                            initialContent=""
+                            onSave={async (title, content) => {
+                              await handleCreate(title, content);
+                              setEditingBranchId(null);
+                            }}
+                            onCancel={() => setEditingBranchId(null)}
+                          />
+                        )}
                         {branches.filter(sb => sb.parentBranchId === branch.id).map(sb => (
                           editingBranchId === sb.id ? (
                             <BranchEditor
