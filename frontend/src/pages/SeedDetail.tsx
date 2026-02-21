@@ -96,94 +96,93 @@ export default function SeedDetail({ seedId }: Props) {
           }}
           renderBranchDetail={(branch) => (
             openBranchId === branch.id ? (
-              editingBranchId === branch.id ? (
-                <BranchEditor
-                  initialTitle={branch.title || ""}
-                  initialContent={branch.content}
-                  onSave={(title, content) => handleUpdate(branch.id, title, content)}
-                  onCancel={() => setEditingBranchId(null)}
-                />
-              ) : (
-                <>
-                  {/* Sub-branches heading and Add Sub-branch button only for saved branches */}
-                  {branch.id && (
+              <>
+                {editingBranchId === branch.id && (
+                  <BranchEditor
+                    initialTitle={branch.title || ""}
+                    initialContent={branch.content}
+                    onSave={(title, content) => handleUpdate(branch.id, title, content)}
+                    onCancel={() => setEditingBranchId(null)}
+                  />
+                )}
+                {/* Sub-branches heading and Add Sub-branch button only for saved branches */}
+                {branch.id && (
+                  <div style={{ marginTop: "1rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
+                      <h3 style={{ fontSize: "1rem", fontWeight: 600, margin: "0", color: "#333" }}>
+                        Sub-branches
+                      </h3>
+                      <button
+                        style={{
+                          marginLeft: "auto",
+                          padding: "0.5rem 1rem",
+                          background: "#4a6cf7",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setEditingBranchId("new-sub-branch-" + branch.id);
+                        }}
+                      >
+                        Add Sub-branch
+                      </button>
+                    </div>
+                    {/* Render only sub-branch cards for this branch */}
                     <div style={{ marginTop: "1rem" }}>
-                      <div style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
-                        <h3 style={{ fontSize: "1rem", fontWeight: 600, margin: "0", color: "#333" }}>
-                          Sub-branches
-                        </h3>
-                        <button
-                          style={{
-                            marginLeft: "auto",
-                            padding: "0.5rem 1rem",
-                            background: "#4a6cf7",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: "pointer",
+                      {/* New Sub-branch editor */}
+                      {editingBranchId === "new-sub-branch-" + branch.id && (
+                        <BranchEditor
+                          initialTitle=""
+                          initialContent=""
+                          onSave={async (title, content) => {
+                            // Create sub-branch with parentBranchId
+                            const newSubBranch = await createBranch({ seedId, title, content, parentBranchId: branch.id });
+                            setBranches((prev) => [...prev, newSubBranch]);
+                            setEditingBranchId(null);
                           }}
-                          onClick={() => {
-                            setEditingBranchId("new-sub-branch-" + branch.id);
-                          }}
-                        >
-                          Add Sub-branch
-                        </button>
-                      </div>
-                      {/* Render only sub-branch cards for this branch */}
-                      <div style={{ marginTop: "1rem" }}>
-                        {/* New Sub-branch editor */}
-                        {editingBranchId === "new-sub-branch-" + branch.id && (
+                          onCancel={() => setEditingBranchId(null)}
+                        />
+                      )}
+                      {branches.filter(sb => sb.parentBranchId === branch.id).map(sb => (
+                        editingBranchId === sb.id ? (
                           <BranchEditor
-                            initialTitle=""
-                            initialContent=""
-                            onSave={async (title, content) => {
-                              // Create sub-branch with parentBranchId
-                              const newSubBranch = await createBranch({ seedId, title, content, parentBranchId: branch.id });
-                              setBranches((prev) => [...prev, newSubBranch]);
-                              setEditingBranchId(null);
-                            }}
+                            initialTitle={sb.title || ""}
+                            initialContent={sb.content}
+                            onSave={(title, content) => handleUpdate(sb.id, title, content)}
                             onCancel={() => setEditingBranchId(null)}
                           />
-                        )}
-                        {branches.filter(sb => sb.parentBranchId === branch.id).map(sb => (
-                          editingBranchId === sb.id ? (
-                            <BranchEditor
-                              initialTitle={sb.title || ""}
-                              initialContent={sb.content}
-                              onSave={(title, content) => handleUpdate(sb.id, title, content)}
-                              onCancel={() => setEditingBranchId(null)}
-                            />
-                          ) : (
-                            <div
-                              key={sb.id}
-                              className="sub-branch-card"
-                              style={{
-                                background: "#f7f7f7",
-                                padding: "1rem",
-                                borderRadius: "8px",
-                                marginBottom: "1rem",
-                                border: "1px solid #e0e0e0",
-                              }}
-                              onClick={e => e.stopPropagation()}
-                            >
-                              <div style={{ fontSize: "1.1rem", fontWeight: 500, marginBottom: "0.5rem" }}>{sb.title || <span style={{ color: '#aaa', fontStyle: 'italic' }}>Untitled Sub-branch</span>}</div>
-                              {sb.content?.trim() && (
-                                <div
-                                  style={{ fontSize: "0.97rem", color: "#444", marginBottom: "0.5rem", maxHeight: "6rem", overflowY: "auto" }}
-                                  dangerouslySetInnerHTML={{ __html: sb.content }}
-                                />
-                              )}
-                              <div style={{ fontSize: "0.8rem", color: "#999" }}>
-                                {sb.createdAt ? new Date(sb.createdAt).toLocaleString() : ''}
-                              </div>
+                        ) : (
+                          <div
+                            key={sb.id}
+                            className="sub-branch-card"
+                            style={{
+                              background: "#f7f7f7",
+                              padding: "1rem",
+                              borderRadius: "8px",
+                              marginBottom: "1rem",
+                              border: "1px solid #e0e0e0",
+                            }}
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <div style={{ fontSize: "1.1rem", fontWeight: 500, marginBottom: "0.5rem" }}>{sb.title || <span style={{ color: '#aaa', fontStyle: 'italic' }}>Untitled Sub-branch</span>}</div>
+                            {sb.content?.trim() && (
+                              <div
+                                style={{ fontSize: "0.97rem", color: "#444", marginBottom: "0.5rem", maxHeight: "6rem", overflowY: "auto" }}
+                                dangerouslySetInnerHTML={{ __html: sb.content }}
+                              />
+                            )}
+                            <div style={{ fontSize: "0.8rem", color: "#999" }}>
+                              {sb.createdAt ? new Date(sb.createdAt).toLocaleString() : ''}
                             </div>
-                          )
-                        ))}
-                      </div>
+                          </div>
+                        )
+                      ))}
                     </div>
-                  )}
-                </>
-              )
+                  </div>
+                )}
+              </>
             ) : null
           )}
         />
