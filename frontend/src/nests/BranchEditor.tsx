@@ -28,6 +28,19 @@ export default function BranchEditor({ initialTitle = "", initialContent = "", o
     >
       <input
         id="branch-title"
+        <input
+          id="branch-title"
+          name="branchTitle"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Branch title..."
+          style={{
+            width: "100%",
+            padding: "0.5rem",
+            marginBottom: "0.5rem",
+            fontSize: "1rem",
+          }}
+        />
         <WysiwygEditor
           title={title}
           description={content}
