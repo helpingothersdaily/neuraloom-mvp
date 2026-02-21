@@ -56,6 +56,13 @@ export default function SeedDetail({ seedId }: Props) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
         <h2 style={{ margin: 0 }}>Branches</h2>
       </div>
+      {/* Always show seed editor at the top */}
+      <BranchEditor
+        initialTitle=""
+        initialContent=""
+        onSave={handleCreate}
+        onCancel={() => {}}
+      />
       <button
         onClick={() => setIsCreating(true)}
         style={{
@@ -70,12 +77,6 @@ export default function SeedDetail({ seedId }: Props) {
       >
         Create Branch
       </button>
-      {isCreating && (
-        <BranchEditor
-          onSave={handleCreate}
-          onCancel={() => setIsCreating(false)}
-        />
-      )}
       {loading ? (
         <p>Loading branches...</p>
       ) : (
