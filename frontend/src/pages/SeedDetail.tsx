@@ -34,7 +34,8 @@ export default function SeedDetail({ seedId }: Props) {
   async function handleCreate(title: string, content: string) {
     const newBranch = await createBranch({ seedId, title: title || "", content });
     setBranches((prev) => [...prev, newBranch]);
-    setIsCreating(false);
+    // Only close seed editor if not creating a sub-branch
+    if (isCreating) setIsCreating(false);
   }
 
   async function handleUpdate(id: string, title: string, content: string) {
@@ -136,7 +137,9 @@ export default function SeedDetail({ seedId }: Props) {
                             initialTitle=""
                             initialContent=""
                             onSave={async (title, content) => {
-                              await handleCreate(title, content);
+                              // Create sub-branch with parentBranchId
+                              const newSubBranch = await createBranch({ seedId, title, content, parentBranchId: branch.id });
+                              setBranches((prev) => [...prev, newSubBranch]);
                               setEditingBranchId(null);
                             }}
                             onCancel={() => setEditingBranchId(null)}
