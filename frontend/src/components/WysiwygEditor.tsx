@@ -24,17 +24,6 @@ const toolbarButtonStyle: CSSProperties = {
   fontSize: "0.85rem",
 };
 
-  title,
-  description,
-  setTitle,
-  setDescription,
-  onSave,
-  onCancel,
-  placeholder = "Write here...",
-  minHeight = "100px",
-  id = "wysiwyg-editor",
-  name = "wysiwygEditor",
-}: WysiwygEditorProps) {
 export default function WysiwygEditor(props: WysiwygEditorProps) {
   const {
     title,
