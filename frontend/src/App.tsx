@@ -330,9 +330,23 @@ export default function App() {
               {new Date(seed.createdAt).toLocaleString()}
             </div>
 
-            {/* Branches Section */}
-            <h2 style={{ fontSize: "1.15rem", fontWeight: 600, margin: "1rem 0 0.5rem 0", color: "#333" }}>Branches</h2>
-            <SeedDetail seedId={seed.id} />
+            {/* Seed Editor: Only show when editingSeedId === seed.id */}
+            {editingSeedId === seed.id ? (
+              <WysiwygEditor
+                title={editTitle}
+                description={editDescription}
+                setTitle={setEditTitle}
+                setDescription={setEditDescription}
+                onSave={() => saveSeed(seed.id)}
+                onCancel={closeSeed}
+              />
+            ) : (
+              <>
+                {/* Branches Section */}
+                <h2 style={{ fontSize: "1.15rem", fontWeight: 600, margin: "1rem 0 0.5rem 0", color: "#333" }}>Branches</h2>
+                <SeedDetail seedId={seed.id} />
+              </>
+            )}
           </div>
         )}
       </div>
