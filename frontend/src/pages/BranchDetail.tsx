@@ -21,6 +21,7 @@ interface NestData {
 }
 
 export default function BranchDetail() {
+  const [showSubBranches, setShowSubBranches] = useState(false);
   const { id: branchId } = useParams();
   const navigate = useNavigate();
 
@@ -176,50 +177,70 @@ export default function BranchDetail() {
         </button>
       </div>
 
-      <h3>Sub-branches</h3>
-      <Tree
-        node={{
-          label: branch.title || "Branch",
-          link: `/branches/${branch.id}`,
-          children: subBranches.map((sb) => ({
-            label: sb.title || "Untitled Branch",
-            link: `/branches/${sb.id}`,
-            children: [], // Phase 2: deeper recursion
-          })),
-        }}
-      />
+      <h3 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        Sub-branches
+        <button
+          style={{
+            marginLeft: 8,
+            fontSize: "0.95rem",
+            padding: "0.25rem 0.75rem",
+            borderRadius: 6,
+            border: "1px solid #ccc",
+            background: showSubBranches ? "#e8f4fc" : "#f5f5f5",
+            color: showSubBranches ? "#1a73e8" : "#444",
+            cursor: "pointer",
+          }}
+          onClick={() => setShowSubBranches((v) => !v)}
+        >
+          {showSubBranches ? "Hide" : "Show"}
+        </button>
+      </h3>
+      {showSubBranches && (
+        <>
+          <Tree
+            node={{
+              label: branch.title || "Branch",
+              link: `/branches/${branch.id}`,
+              children: subBranches.map((sb) => ({
+                label: sb.title || "Untitled Branch",
+                link: `/branches/${sb.id}`,
+                children: [],
+              })),
+            }}
+          />
+          <button
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              background: "#4a6cf7",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+            onClick={async () => {
+              const payload = {
+                title: "New Sub-branch",
+                content: "",
+                parentBranchId: branch.id,
+                nestId: branch.nestId || null,
+              };
 
-      <button
-        style={{
-          marginTop: "1rem",
-          padding: "0.5rem 1rem",
-          background: "#4a6cf7",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-        onClick={async () => {
-          const payload = {
-            title: "New Sub-branch",
-            content: "",
-            parentBranchId: branch.id,
-            nestId: branch.nestId || null,
-          };
+              const res = await fetch("/api/branches", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
 
-          const res = await fetch("/api/branches", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          const result = await res.json();
-          const newBranch = result.data || result;
-          navigate(`/branches/${newBranch.id}`);
-        }}
-      >
-        Add Sub-branch
-      </button>
+              const result = await res.json();
+              const newBranch = result.data || result;
+              navigate(`/branches/${newBranch.id}`);
+            }}
+          >
+            Add Sub-branch
+          </button>
+        </>
+      )}
     </div>
   );
 }
