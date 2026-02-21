@@ -33,7 +33,7 @@ const toolbarButtonStyle: CSSProperties = {
   minHeight = "100px",
   id = "wysiwyg-editor",
   name = "wysiwygEditor",
-}: WysiwygEditorProps) { 
+}: WysiwygEditorProps) {
   const {
     title,
     description,
