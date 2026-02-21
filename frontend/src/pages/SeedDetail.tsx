@@ -134,26 +134,30 @@ export default function SeedDetail({ seedId }: Props) {
                     <div style={{ marginTop: "1rem" }}>
                       {/* New Sub-branch editor */}
                       {editingBranchId === "new-sub-branch-" + branch.id && (
-                        <BranchEditor
-                          initialTitle=""
-                          initialContent=""
-                          onSave={async (title, content) => {
-                            // Create sub-branch with parentBranchId
-                            const newSubBranch = await createBranch({ seedId, title, content, parentBranchId: branch.id });
-                            setBranches((prev) => [...prev, newSubBranch]);
-                            setEditingBranchId(null);
-                          }}
-                          onCancel={() => setEditingBranchId(null)}
-                        />
+                        <div onClick={e => e.stopPropagation()}>
+                          <BranchEditor
+                            initialTitle=""
+                            initialContent=""
+                            onSave={async (title, content) => {
+                              // Create sub-branch with parentBranchId
+                              const newSubBranch = await createBranch({ seedId, title, content, parentBranchId: branch.id });
+                              setBranches((prev) => [...prev, newSubBranch]);
+                              setEditingBranchId(null);
+                            }}
+                            onCancel={() => setEditingBranchId(null)}
+                          />
+                        </div>
                       )}
                       {branches.filter(sb => sb.parentBranchId === branch.id).map(sb => (
                         editingBranchId === sb.id ? (
-                          <BranchEditor
-                            initialTitle={sb.title || ""}
-                            initialContent={sb.content}
-                            onSave={(title, content) => handleUpdate(sb.id, title, content)}
-                            onCancel={() => setEditingBranchId(null)}
-                          />
+                          <div onClick={e => e.stopPropagation()}>
+                            <BranchEditor
+                              initialTitle={sb.title || ""}
+                              initialContent={sb.content}
+                              onSave={(title, content) => handleUpdate(sb.id, title, content)}
+                              onCancel={() => setEditingBranchId(null)}
+                            />
+                          </div>
                         ) : (
                           <div
                             key={sb.id}
