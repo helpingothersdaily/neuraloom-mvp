@@ -122,7 +122,8 @@ export default function SeedDetail({ seedId }: Props) {
                           borderRadius: "6px",
                           cursor: "pointer",
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingBranchId("new-sub-branch-" + branch.id);
                         }}
                       >
