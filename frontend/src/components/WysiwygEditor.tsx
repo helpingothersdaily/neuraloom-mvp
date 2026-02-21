@@ -34,6 +34,7 @@ const toolbarButtonStyle: CSSProperties = {
   id = "wysiwyg-editor",
   name = "wysiwygEditor",
 }: WysiwygEditorProps) {
+export default function WysiwygEditor(props: WysiwygEditorProps) {
   const {
     title,
     description,
