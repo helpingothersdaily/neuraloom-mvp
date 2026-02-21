@@ -28,54 +28,17 @@ export default function BranchEditor({ initialTitle = "", initialContent = "", o
     >
       <input
         id="branch-title"
-        name="branchTitle"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Branch title..."
-        style={{
-          width: "100%",
-          padding: "0.5rem",
-          marginBottom: "0.5rem",
-          fontSize: "1rem",
-        }}
-      />
-
-      <WysiwygEditor
-        value={content}
-        onChange={setContent}
-        id="branch-content"
-        name="branchContent"
-        placeholder="Write your branch..."
-        minHeight="80px"
-      />
-
-      <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem" }}>
-        <button
-          onClick={() => onSave(title, content)}
-          style={{
-            padding: "0.5rem 1rem",
-            background: "#4a6cf7",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
-          Save
-        </button>
-        <button
-          onClick={onCancel}
-          style={{
-            padding: "0.5rem 1rem",
-            background: "#eee",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
+        <WysiwygEditor
+          title={title}
+          description={content}
+          setTitle={setTitle}
+          setDescription={setContent}
+          onSave={() => onSave(title, content)}
+          onCancel={onCancel}
+          placeholder="Write your branch..."
+          minHeight="80px"
+          id="branch-content"
+          name="branchContent"
+        />
   );
 }
