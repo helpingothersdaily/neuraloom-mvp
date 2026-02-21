@@ -39,17 +39,18 @@ export default function BranchEditor({ initialTitle = "", initialContent = "", o
           fontSize: "1rem",
         }}
       />
-        <WysiwygEditor
-          title={title}
-          description={content}
-          setTitle={setTitle}
-          setDescription={setContent}
-          onSave={() => onSave(title, content)}
-          onCancel={onCancel}
-          placeholder="Write your branch..."
-          minHeight="80px"
-          id="branch-content"
-          name="branchContent"
-        />
+      <WysiwygEditor
+        title={title}
+        description={content}
+        setTitle={setTitle}
+        setDescription={setContent}
+        onSave={() => onSave(title, content)}
+        onCancel={onCancel}
+        placeholder="Write your branch..."
+        minHeight="80px"
+        id="branch-content"
+        name="branchContent"
+      />
+    </div>
   );
 }
